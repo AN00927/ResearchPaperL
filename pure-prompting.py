@@ -113,12 +113,6 @@ def query_openrouter(messages: List[Dict], max_retries: int = 3) -> Tuple[str, D
     return None, diagnostics
 
 
-# ============================================
-# PROMPT CONSTRUCTION
-# ============================================
-
-
-
 
 def build_user_prompt(scenario: Dict, alternative: str) -> str:
     return f"""Score this alternative: "{alternative}"
