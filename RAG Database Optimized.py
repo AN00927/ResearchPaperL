@@ -498,11 +498,3 @@ def run_scenario(scenario: Dict) -> Dict:
 
 #add a run Test set based on the scenarios once they are finished
 #do this for other two architectures asw
-if __name__ == "__main__":
-    TEST_CSV = '/mnt/user-data/uploads/test_scenarios.csv'
-
-    if not os.path.exists(TEST_CSV):
-        print(f"⚠ Test file not found: {TEST_CSV}")
-        print("  Please upload test_scenarios.csv to /mnt/user-data/uploads/")
-    else:
-        run_test_set(TEST_CSV)
