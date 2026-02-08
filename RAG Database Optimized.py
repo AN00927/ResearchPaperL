@@ -1,25 +1,3 @@
-"""
-RAG-Enhanced MCDA Architecture
-===============================
-
-Retrieves similar scenarios from ChromaDB vector database before scoring.
-Architecture comparison: Pure Prompting gets NO examples, RAG gets 3 similar examples.
-
-Key difference from Pure Prompting:
-- BEFORE scoring, retrieves k=3 most similar scenarios (filtered by decision type)
-- LLM sees retrieved examples with ground truth scores as context
-- Still single LLM call (not two-stage), just with augmented context
-
-Same as Pure Prompting:
-- Same model (mistralai/mistral-small-3.2)
-- Same criterion weights (0.35, 0.30, 0.20, 0.15)
-- Same MAVT weighted sum ranking
-- Same output format and logging
-
-Author: Research Project
-Date: 2025
-"""
-
 import os
 import json
 import csv
@@ -38,14 +16,12 @@ if not OPENROUTER_API_KEY:
     raise ValueError("OPENROUTER_API_KEY not found in environment variables!")
 
 MODEL_ID = "mistralai/mistral-small-3.2"
-TEMPERATURE = 0.3  # Low temperature for consistency
-
-# MCDA weights (Dyer & Sarin 1979, Keeney & Raiffa 1976)
+TEMPERATURE = 0.3
 CRITERION_WEIGHTS = {
-    'energy_cost': 0.35,  # Highest weight (economic impact)
-    'environmental': 0.30,  # Second (sustainability)
-    'comfort': 0.20,  # Third (user satisfaction)
-    'practicality': 0.15  # Fourth (behavioral feasibility)
+    'energy_cost': 0.35,
+    'environmental': 0.30,
+    'comfort': 0.20,
+    'practicality': 0.15
 }
 
 CHROMA_DB_PATH = './chroma_rag_db'
