@@ -14,7 +14,7 @@ GROUND_TRUTH_CSVS = {
 
 ARCHITECTURE_CSVS = {
     'Pure':   'pure_prompting_results.csv',
-    'RAG':    'rag_enhanced_results.csv',
+    'RAG':    'RAGResults.csv',
     'Hybrid': 'hybrid_results.csv',
 }
 

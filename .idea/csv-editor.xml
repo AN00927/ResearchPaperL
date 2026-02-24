@@ -10,6 +10,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\ShowerRAGScenarios.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\ShowerScenarios.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\ground_truth_appliance.csv">
           <value>
             <Attribute>
@@ -31,6 +45,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\hybrid_results.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\metrics_comparison.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\pure_prompting_results.csv">
           <value>
             <Attribute>
@@ -45,7 +73,7 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="\testing_scenarios.csv">
+        <entry key="\test_scenarios.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

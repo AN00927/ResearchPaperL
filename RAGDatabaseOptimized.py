@@ -32,8 +32,8 @@ RETRIEVE_K = 3  # Number of similar scenarios to retrieve
 MAX_RETRIES = 3
 RETRY_DELAY = 2
 
-OUTPUT_CSV = 'rag_enhanced_results.csv'
-OUTPUT_DIAGNOSTICS = 'rag_enhanced_diagnostics.json'
+OUTPUT_CSV = 'RAGResults.csv'
+OUTPUT_DIAGNOSTICS = 'RAGDiagnostics.json'
 
 print("Loading ChromaDB and embedding model")
 try:
