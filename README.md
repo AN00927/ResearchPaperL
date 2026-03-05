@@ -15,12 +15,12 @@ This project investigates the reliability of AI-generated Multi-Criteria Decisio
 
 ---
 
-## Three Architectures Being Compared
+## Three Architectures Being Compared on 4 criterion and overall ranking of alternatives (3 per scenario)
 
 ### 1. Pure Prompting
 - **Approach:** LLM scores all four criteria (Energy Cost, Environmental Impact, Comfort, Practicality) directly using calibrated system prompts
 - **Input:** Natural language user question + household context
-- **Output:** Four 1-10 scores per alternative
+- **Output:** Four 0-10 scores per alternative
 
 ### 2. RAG-Enhanced
 - **Approach:** LLM retrieves relevant research chunks from vector database before scoring
@@ -97,10 +97,6 @@ Each architecture will be evaluated on:
 
 - Python 3.12
 - OpenRouter API (LLM access)
-- scikit-criteria (TOPSIS implementation)
-- OpenEI API (electricity rates)
-- OpenWeatherMap API (climate data)
-- Supabase (optional: user management for future human study)
 
 See `requirements.txt` for full list.
 
