@@ -1,0 +1,301 @@
+﻿scenario_id,question,location,decision_type,alternative,energy_cost,environmental,comfort,practicality,rank,weighted_score
+1,Cold day today with 2 people home. What's a good heating temperature?,"Bethlehem, PA",HVAC,67,5.0,5.0,8.6,7.3,3,6.0649999999999995
+1,Cold day today with 2 people home. What's a good heating temperature?,"Bethlehem, PA",HVAC,70,5.3,5.3,8.6,7.3,1,6.259999999999999
+1,Cold day today with 2 people home. What's a good heating temperature?,"Bethlehem, PA",HVAC,73,5.3,5.3,8.6,7.3,2,6.259999999999999
+2,It's hot today and we're home as usual. What temperature should I set the AC to?,"Doylestown, PA",HVAC,72,4.1,4.1,5.7,8.7,3,5.109999999999999
+2,It's hot today and we're home as usual. What temperature should I set the AC to?,"Doylestown, PA",HVAC,75,4.3,4.3,9.3,9.6,1,6.095000000000001
+2,It's hot today and we're home as usual. What temperature should I set the AC to?,"Doylestown, PA",HVAC,79,4.8,4.8,5.9,9.6,2,5.74
+3,It's cold outside and we're home as usual. What should I set the heat to?,"Doylestown, PA",HVAC,68,8.3,8.3,8.6,7.3,1,8.21
+3,It's cold outside and we're home as usual. What should I set the heat to?,"Doylestown, PA",HVAC,71,7.8,7.8,9.5,7.3,2,8.065000000000001
+3,It's cold outside and we're home as usual. What should I set the heat to?,"Doylestown, PA",HVAC,74,7.8,7.8,9.5,7.3,3,8.065000000000001
+4,Someone's home all day and it's hot outside. What should I set the AC to?,"Media, PA",HVAC,75,6.5,6.5,9.0,10.0,1,7.5249999999999995
+4,Someone's home all day and it's hot outside. What should I set the AC to?,"Media, PA",HVAC,78,6.0,6.0,8.0,9.0,2,6.85
+4,Someone's home all day and it's hot outside. What should I set the AC to?,"Media, PA",HVAC,81,6.0,6.0,8.0,9.0,3,6.85
+5,Someone's home all day and it's cold. What heating temperature should I use?,"Media, PA",HVAC,67,4.8,4.8,7.5,7.3,3,5.715
+5,Someone's home all day and it's cold. What heating temperature should I use?,"Media, PA",HVAC,70,5.0,5.0,8.6,7.3,1,6.0649999999999995
+5,Someone's home all day and it's cold. What heating temperature should I use?,"Media, PA",HVAC,73,4.8,4.8,8.6,7.3,2,5.935
+6,We're all out for 8 hours in the heat. What AC setting makes sense?,"Allentown, PA",HVAC,76,4.7,4.7,8.8,9.2,1,6.194999999999999
+6,We're all out for 8 hours in the heat. What AC setting makes sense?,"Allentown, PA",HVAC,79,4.8,4.8,7.5,9.5,2,6.045
+6,We're all out for 8 hours in the heat. What AC setting makes sense?,"Allentown, PA",HVAC,82,4.8,4.8,6.8,9.2,3,5.86
+7,We're all out for 8 hours in cold weather. What heating temperature is best?,"Allentown, PA",HVAC,66,6.5,6.5,4.5,8.0,3,6.325
+7,We're all out for 8 hours in cold weather. What heating temperature is best?,"Allentown, PA",HVAC,69,6.5,6.5,7.8,8.5,2,7.0600000000000005
+7,We're all out for 8 hours in cold weather. What heating temperature is best?,"Allentown, PA",HVAC,72,6.5,6.5,8.0,9.0,1,7.174999999999999
+8,The house will be empty for 12 hours today. What AC temperature should I set?,"Harrisburg, PA",HVAC,76,2.0,2.0,7.6,9.6,1,4.26
+8,The house will be empty for 12 hours today. What AC temperature should I set?,"Harrisburg, PA",HVAC,79,2.0,2.0,7.6,9.6,2,4.26
+8,The house will be empty for 12 hours today. What AC temperature should I set?,"Harrisburg, PA",HVAC,82,2.8,2.8,3.9,9.6,3,4.039999999999999
+9,The house will be empty for 12 hours today. What heat setting should I use?,"Harrisburg, PA",HVAC,66,0.0,0.0,0.0,7.3,1,1.095
+9,The house will be empty for 12 hours today. What heat setting should I use?,"Harrisburg, PA",HVAC,69,0.0,0.0,0.0,7.3,2,1.095
+9,The house will be empty for 12 hours today. What heat setting should I use?,"Harrisburg, PA",HVAC,72,0.0,0.0,0.0,7.3,3,1.095
+10,I'm working from home today and it's hot. What AC temperature should I use?,"Blue Bell, PA",HVAC,73,8.2,8.2,7.8,9.6,3,8.329999999999998
+10,I'm working from home today and it's hot. What AC temperature should I use?,"Blue Bell, PA",HVAC,76,8.3,8.3,9.3,9.6,1,8.695
+10,I'm working from home today and it's hot. What AC temperature should I use?,"Blue Bell, PA",HVAC,79,8.0,8.0,8.5,9.6,2,8.34
+11,I'm working from home and it's cold outside. What should I set the heat to?,"Blue Bell, PA",HVAC,68,8.0,8.0,9.0,7.3,1,8.094999999999999
+11,I'm working from home and it's cold outside. What should I set the heat to?,"Blue Bell, PA",HVAC,71,7.8,7.8,9.5,7.3,2,8.065000000000001
+11,I'm working from home and it's cold outside. What should I set the heat to?,"Blue Bell, PA",HVAC,74,6.5,6.5,8.6,7.3,3,7.039999999999999
+12,The house will be empty for 4 hours today. What AC temperature should I set?,"York, PA",HVAC,78,5.0,5.0,8.0,9.5,1,6.2749999999999995
+12,The house will be empty for 4 hours today. What AC temperature should I set?,"York, PA",HVAC,81,4.0,4.0,6.0,9.0,3,5.1499999999999995
+12,The house will be empty for 4 hours today. What AC temperature should I set?,"York, PA",HVAC,84,6.0,6.0,4.0,9.6,2,6.139999999999999
+13,The house will be empty for 4 hours today. What heat setting should I use?,"York, PA",HVAC,65,6.0,6.0,5.5,7.3,3,6.095
+13,The house will be empty for 4 hours today. What heat setting should I use?,"York, PA",HVAC,68,6.0,6.0,6.0,7.3,1,6.194999999999999
+13,The house will be empty for 4 hours today. What heat setting should I use?,"York, PA",HVAC,71,6.0,6.0,6.0,7.3,2,6.194999999999999
+14,I'll be home all day working and it's hot outside. What AC temperature makes sense?,"Phoenixville, PA",HVAC,76,5.0,5.0,8.0,9.0,2,6.199999999999999
+14,I'll be home all day working and it's hot outside. What AC temperature makes sense?,"Phoenixville, PA",HVAC,79,5.0,5.0,7.0,9.0,3,6.0
+14,I'll be home all day working and it's hot outside. What AC temperature makes sense?,"Phoenixville, PA",HVAC,82,5.5,5.5,6.1,10.0,1,6.295
+15,I'll be home all day and it's cold. What temperature should I set the thermostat to?,"Phoenixville, PA",HVAC,66,5.0,5.0,7.0,7.3,3,5.745
+15,I'll be home all day and it's cold. What temperature should I set the thermostat to?,"Phoenixville, PA",HVAC,69,5.0,5.0,9.3,7.3,2,6.205
+15,I'll be home all day and it's cold. What temperature should I set the thermostat to?,"Phoenixville, PA",HVAC,72,6.0,6.0,8.6,7.3,1,6.714999999999999
+16,No one's home for 8 hours and it's hot. What should I set the AC to?,"Scranton, PA",HVAC,75,5.8,5.8,9.3,9.6,2,7.07
+16,No one's home for 8 hours and it's hot. What should I set the AC to?,"Scranton, PA",HVAC,78,7.0,7.0,7.0,10.0,1,7.45
+16,No one's home for 8 hours and it's hot. What should I set the AC to?,"Scranton, PA",HVAC,81,7.0,7.0,4.0,10.0,3,6.85
+17,No one's home for 8 hours and it's cold. What should I set the heat to?,"Scranton, PA",HVAC,66,5.5,5.5,4.5,7.3,1,5.569999999999999
+17,No one's home for 8 hours and it's cold. What should I set the heat to?,"Scranton, PA",HVAC,69,4.5,4.5,4.6,7.3,2,4.9399999999999995
+17,No one's home for 8 hours and it's cold. What should I set the heat to?,"Scranton, PA",HVAC,72,4.0,4.0,4.0,7.3,3,4.494999999999999
+18,We're all out for 8 hours in the heat. What AC setting makes sense?,"Norristown, PA",HVAC,78,6.0,6.0,8.6,9.6,1,7.059999999999999
+18,We're all out for 8 hours in the heat. What AC setting makes sense?,"Norristown, PA",HVAC,81,6.4,6.4,5.1,9.6,2,6.619999999999999
+18,We're all out for 8 hours in the heat. What AC setting makes sense?,"Norristown, PA",HVAC,84,6.9,6.9,2.9,8.7,3,6.369999999999999
+19,We're all out for 8 hours in cold weather. What heating temperature is best?,"Norristown, PA",HVAC,65,7.0,7.0,6.1,7.3,2,6.864999999999999
+19,We're all out for 8 hours in cold weather. What heating temperature is best?,"Norristown, PA",HVAC,68,7.5,7.5,6.1,8.0,1,7.295
+19,We're all out for 8 hours in cold weather. What heating temperature is best?,"Norristown, PA",HVAC,71,6.5,6.5,4.5,9.6,3,6.5649999999999995
+20,It's hot today and we're home as usual. What temperature should I set the AC to?,"Lower Merion, PA",HVAC,71,3.9,3.9,6.5,8.7,3,5.14
+20,It's hot today and we're home as usual. What temperature should I set the AC to?,"Lower Merion, PA",HVAC,75,4.5,4.5,9.5,9.6,1,6.265000000000001
+20,It's hot today and we're home as usual. What temperature should I set the AC to?,"Lower Merion, PA",HVAC,79,5.2,5.2,5.7,9.6,2,5.959999999999999
+21,It's cold outside and we're home as usual. What should I set the heat to?,"Lower Merion, PA",HVAC,68,8.0,8.0,8.6,7.3,1,8.014999999999999
+21,It's cold outside and we're home as usual. What should I set the heat to?,"Lower Merion, PA",HVAC,71,7.5,7.5,9.5,7.3,2,7.87
+21,It's cold outside and we're home as usual. What should I set the heat to?,"Lower Merion, PA",HVAC,74,5.0,5.0,9.5,7.3,3,6.245
+22,The house is unoccupied for 4 hours today. What's the best AC temperature?,"King of Prussia, PA",HVAC,75,6.5,6.5,8.0,9.6,2,7.264999999999999
+22,The house is unoccupied for 4 hours today. What's the best AC temperature?,"King of Prussia, PA",HVAC,78,6.9,6.9,8.6,9.6,1,7.645
+22,The house is unoccupied for 4 hours today. What's the best AC temperature?,"King of Prussia, PA",HVAC,81,7.2,7.2,5.1,9.6,3,7.139999999999999
+23,The house is unoccupied for 4 hours. What should I set the thermostat to?,"King of Prussia, PA",HVAC,66,7.1,7.1,4.1,9.6,2,6.875
+23,The house is unoccupied for 4 hours. What should I set the thermostat to?,"King of Prussia, PA",HVAC,69,6.5,6.5,7.3,9.6,1,7.125
+23,The house is unoccupied for 4 hours. What should I set the thermostat to?,"King of Prussia, PA",HVAC,72,6.0,6.0,3.0,8.0,3,5.7
+24,It's hot today and we're home as usual. What temperature should I set the AC to?,"Pottstown, PA",HVAC,76,6.8,6.8,8.8,10.0,1,7.68
+24,It's hot today and we're home as usual. What temperature should I set the AC to?,"Pottstown, PA",HVAC,79,5.5,5.5,7.5,9.0,2,6.424999999999999
+24,It's hot today and we're home as usual. What temperature should I set the AC to?,"Pottstown, PA",HVAC,82,5.5,5.5,6.1,10.0,3,6.295
+25,It's cold outside and we're home as usual. What should I set the heat to?,"Pottstown, PA",HVAC,66,5.0,5.0,7.0,8.0,3,5.8500000000000005
+25,It's cold outside and we're home as usual. What should I set the heat to?,"Pottstown, PA",HVAC,69,5.0,5.0,9.3,7.3,2,6.205
+25,It's cold outside and we're home as usual. What should I set the heat to?,"Pottstown, PA",HVAC,72,5.0,5.0,9.0,8.0,1,6.25
+26,It's hot today and everyone's home. What temperature makes sense for the AC?,"Exton, PA",HVAC,73,4.1,4.1,5.7,8.7,3,5.109999999999999
+26,It's hot today and everyone's home. What temperature makes sense for the AC?,"Exton, PA",HVAC,76,4.6,4.6,10.0,9.6,1,6.43
+26,It's hot today and everyone's home. What temperature makes sense for the AC?,"Exton, PA",HVAC,79,5.0,5.0,5.7,9.6,2,5.83
+27,It's cold today and everyone's home. What heating temperature should I use?,"Exton, PA",HVAC,67,5.5,5.5,8.8,7.3,2,6.43
+27,It's cold today and everyone's home. What heating temperature should I use?,"Exton, PA",HVAC,70,5.5,5.5,9.0,7.3,1,6.47
+27,It's cold today and everyone's home. What heating temperature should I use?,"Exton, PA",HVAC,73,5.1,5.1,9.0,7.3,3,6.209999999999999
+28,"With 2 people home on a hot day, what's the best AC setting?","Reading, PA",HVAC,78,6.2,6.2,8.3,9.6,1,7.129999999999999
+28,"With 2 people home on a hot day, what's the best AC setting?","Reading, PA",HVAC,81,6.5,6.5,5.1,9.6,2,6.684999999999999
+28,"With 2 people home on a hot day, what's the best AC setting?","Reading, PA",HVAC,84,6.5,6.5,1.5,7.3,3,5.619999999999999
+29,Cold day today with 2 people home. What's a good heating temperature?,"Reading, PA",HVAC,65,5.5,5.5,4.1,7.3,3,5.489999999999999
+29,Cold day today with 2 people home. What's a good heating temperature?,"Reading, PA",HVAC,68,5.0,5.0,8.6,7.3,2,6.0649999999999995
+29,Cold day today with 2 people home. What's a good heating temperature?,"Reading, PA",HVAC,71,5.5,5.5,9.3,7.3,1,6.53
+30,It's a hot day. What should I set my air conditioning to?,"Newtown, PA",HVAC,74,3.6,3.6,8.6,9.6,3,5.5
+30,It's a hot day. What should I set my air conditioning to?,"Newtown, PA",HVAC,77,8.5,8.5,9.3,9.6,1,8.825
+30,It's a hot day. What should I set my air conditioning to?,"Newtown, PA",HVAC,80,4.6,4.6,6.1,10.0,2,5.71
+31,It's a cold day. What should I set the thermostat to?,"Newtown, PA",HVAC,67,8.1,8.1,9.0,7.3,2,8.159999999999998
+31,It's a cold day. What should I set the thermostat to?,"Newtown, PA",HVAC,70,8.2,8.2,10.0,7.3,1,8.424999999999999
+31,It's a cold day. What should I set the thermostat to?,"Newtown, PA",HVAC,73,6.5,6.5,7.5,7.3,3,6.819999999999999
+32,It's hot today and we're home as usual. What temperature should I set the AC to?,"Wilkes-Barre, PA",HVAC,75,6.0,6.0,8.5,10.0,2,7.1
+32,It's hot today and we're home as usual. What temperature should I set the AC to?,"Wilkes-Barre, PA",HVAC,78,6.8,6.8,8.8,10.0,1,7.68
+32,It's hot today and we're home as usual. What temperature should I set the AC to?,"Wilkes-Barre, PA",HVAC,81,6.4,6.4,5.1,10.0,3,6.68
+33,It's cold outside and we're home as usual. What should I set the heat to?,"Wilkes-Barre, PA",HVAC,66,6.0,6.0,8.0,9.0,2,6.85
+33,It's cold outside and we're home as usual. What should I set the heat to?,"Wilkes-Barre, PA",HVAC,69,4.0,4.0,9.0,8.0,3,5.6
+33,It's cold outside and we're home as usual. What should I set the heat to?,"Wilkes-Barre, PA",HVAC,72,6.5,6.5,9.0,8.0,1,7.225
+34,"With 2 people home on a hot day, what's the best AC setting?","Carlisle, PA",HVAC,78,5.0,5.0,8.0,8.5,2,6.125
+34,"With 2 people home on a hot day, what's the best AC setting?","Carlisle, PA",HVAC,81,5.8,5.8,6.1,9.6,1,6.43
+34,"With 2 people home on a hot day, what's the best AC setting?","Carlisle, PA",HVAC,84,6.3,6.3,2.9,8.7,3,5.9799999999999995
+35,Cold day today with 2 people home. What's a good heating temperature?,"Carlisle, PA",HVAC,65,5.8,5.8,3.5,7.3,3,5.5649999999999995
+35,Cold day today with 2 people home. What's a good heating temperature?,"Carlisle, PA",HVAC,68,4.5,4.5,8.0,7.3,2,5.62
+35,Cold day today with 2 people home. What's a good heating temperature?,"Carlisle, PA",HVAC,71,4.8,4.8,8.8,7.3,1,5.9750000000000005
+36,It's hot today and everyone's home. What temperature makes sense for the AC?,"Lebanon, PA",HVAC,76,4.2,4.2,9.3,9.6,2,6.029999999999999
+36,It's hot today and everyone's home. What temperature makes sense for the AC?,"Lebanon, PA",HVAC,79,4.2,4.2,8.9,9.6,3,5.949999999999999
+36,It's hot today and everyone's home. What temperature makes sense for the AC?,"Lebanon, PA",HVAC,82,5.5,5.5,7.1,9.6,1,6.434999999999999
+37,It's cold today and everyone's home. What heating temperature should I use?,"Lebanon, PA",HVAC,66,6.0,6.0,9.3,7.3,1,6.8549999999999995
+37,It's cold today and everyone's home. What heating temperature should I use?,"Lebanon, PA",HVAC,69,5.0,5.0,9.3,7.3,2,6.205
+37,It's cold today and everyone's home. What heating temperature should I use?,"Lebanon, PA",HVAC,72,5.0,5.0,9.0,7.5,3,6.175
+38,It's a hot day. What should I set my air conditioning to?,"Gettysburg, PA",HVAC,74,8.2,8.2,8.5,9.6,2,8.469999999999999
+38,It's a hot day. What should I set my air conditioning to?,"Gettysburg, PA",HVAC,77,8.3,8.3,9.3,9.6,1,8.695
+38,It's a hot day. What should I set my air conditioning to?,"Gettysburg, PA",HVAC,80,8.3,8.3,6.1,10.0,3,8.115
+39,It's a cold day. What should I set the thermostat to?,"Gettysburg, PA",HVAC,67,6.3,6.3,7.8,7.3,1,6.749999999999999
+39,It's a cold day. What should I set the thermostat to?,"Gettysburg, PA",HVAC,70,5.5,5.5,9.0,7.3,2,6.47
+39,It's a cold day. What should I set the thermostat to?,"Gettysburg, PA",HVAC,73,5.5,5.5,7.8,7.3,3,6.2299999999999995
+40,What temperature should I set the AC to overnight?,"Chambersburg, PA",HVAC,75,5.0,5.0,9.0,9.5,1,6.475
+40,What temperature should I set the AC to overnight?,"Chambersburg, PA",HVAC,78,5.0,5.0,7.5,9.8,2,6.22
+40,What temperature should I set the AC to overnight?,"Chambersburg, PA",HVAC,81,4.9,4.9,5.9,9.8,3,5.835
+41,What temperature should I set the heat to overnight?,"Chambersburg, PA",HVAC,67,5.0,5.0,5.5,7.3,2,5.444999999999999
+41,What temperature should I set the heat to overnight?,"Chambersburg, PA",HVAC,70,4.8,4.8,8.8,7.3,1,5.9750000000000005
+41,What temperature should I set the heat to overnight?,"Chambersburg, PA",HVAC,73,4.2,4.2,7.9,7.3,3,5.405
+42,It's hot today and everyone's home. What temperature makes sense for the AC?,"Altoona, PA",HVAC,76,6.3,6.3,7.1,9.6,1,6.955
+42,It's hot today and everyone's home. What temperature makes sense for the AC?,"Altoona, PA",HVAC,79,6.3,6.3,7.1,9.6,2,6.955
+42,It's hot today and everyone's home. What temperature makes sense for the AC?,"Altoona, PA",HVAC,82,6.4,6.4,5.6,9.6,3,6.720000000000001
+43,It's cold today and everyone's home. What heating temperature should I use?,"Altoona, PA",HVAC,66,6.5,6.5,7.1,7.3,3,6.739999999999999
+43,It's cold today and everyone's home. What heating temperature should I use?,"Altoona, PA",HVAC,69,6.5,6.5,8.6,7.3,1,7.039999999999999
+43,It's cold today and everyone's home. What heating temperature should I use?,"Altoona, PA",HVAC,72,6.5,6.5,7.5,7.3,2,6.819999999999999
+44,I'm setting the thermostat for bedtime. What AC temperature is best for sleeping?,"Stroudsburg, PA",HVAC,76,5.8,5.8,8.8,9.8,1,6.999999999999999
+44,I'm setting the thermostat for bedtime. What AC temperature is best for sleeping?,"Stroudsburg, PA",HVAC,79,5.1,5.1,8.3,9.8,3,6.444999999999999
+44,I'm setting the thermostat for bedtime. What AC temperature is best for sleeping?,"Stroudsburg, PA",HVAC,82,5.8,5.8,7.5,9.5,2,6.694999999999999
+45,I'm setting the thermostat for bedtime. What heating temperature is best for sleeping?,"Stroudsburg, PA",HVAC,66,6.0,6.0,7.0,8.0,2,6.5
+45,I'm setting the thermostat for bedtime. What heating temperature is best for sleeping?,"Stroudsburg, PA",HVAC,69,6.0,6.0,8.0,8.5,1,6.775
+45,I'm setting the thermostat for bedtime. What heating temperature is best for sleeping?,"Stroudsburg, PA",HVAC,72,5.5,5.5,7.5,8.5,3,6.35
+46,"With people home all day in the heat, what's the best AC setting?","Hazleton, PA",HVAC,78,3.5,3.5,8.0,9.5,3,5.3
+46,"With people home all day in the heat, what's the best AC setting?","Hazleton, PA",HVAC,80,4.0,4.0,8.0,9.0,1,5.549999999999999
+46,"With people home all day in the heat, what's the best AC setting?","Hazleton, PA",HVAC,82,4.0,4.0,7.0,9.0,2,5.35
+47,It's hot today and we're home as usual. What temperature should I set the AC to?,"Monroeville, PA",HVAC,76,4.5,4.5,9.0,9.5,2,6.1499999999999995
+47,It's hot today and we're home as usual. What temperature should I set the AC to?,"Monroeville, PA",HVAC,78,6.0,6.0,8.6,9.6,1,7.059999999999999
+47,It's hot today and we're home as usual. What temperature should I set the AC to?,"Monroeville, PA",HVAC,80,5.0,5.0,7.0,9.0,3,6.0
+48,I'll be home all day working and it's hot outside. What AC temperature makes sense?,"New Castle, PA",HVAC,79,2.0,2.0,8.0,9.6,3,4.34
+48,I'll be home all day working and it's hot outside. What AC temperature makes sense?,"New Castle, PA",HVAC,81,3.0,3.0,7.0,8.0,2,4.55
+48,I'll be home all day working and it's hot outside. What AC temperature makes sense?,"New Castle, PA",HVAC,83,3.0,3.0,8.0,9.6,1,4.99
+49,It's hot today and we're home as usual. What temperature should I set the AC to?,"Butler, PA",HVAC,72,4.1,4.1,5.7,8.7,3,5.109999999999999
+49,It's hot today and we're home as usual. What temperature should I set the AC to?,"Butler, PA",HVAC,75,8.3,8.3,9.3,9.6,1,8.695
+49,It's hot today and we're home as usual. What temperature should I set the AC to?,"Butler, PA",HVAC,78,4.8,4.8,8.6,9.6,2,6.279999999999999
+50,The house will be empty for 4 hours today. What AC temperature should I set?,"Coatesville, PA",HVAC,77,6.5,6.5,9.3,9.6,1,7.525
+50,The house will be empty for 4 hours today. What AC temperature should I set?,"Coatesville, PA",HVAC,79,7.0,7.0,7.5,9.6,2,7.49
+50,The house will be empty for 4 hours today. What AC temperature should I set?,"Coatesville, PA",HVAC,81,7.2,7.2,6.0,9.6,3,7.32
+51,It's a hot day. What should I set my air conditioning to?,"Uniontown, PA",HVAC,78,5.0,5.0,8.0,9.5,1,6.2749999999999995
+51,It's a hot day. What should I set my air conditioning to?,"Uniontown, PA",HVAC,80,4.0,4.0,6.6,9.6,2,5.359999999999999
+51,It's a hot day. What should I set my air conditioning to?,"Uniontown, PA",HVAC,82,2.8,2.8,5.9,9.6,3,4.4399999999999995
+52,Cold day today with 3 people home. What's a good heating temperature?,"Indiana, PA",HVAC,65,5.0,5.0,8.0,8.0,3,6.05
+52,Cold day today with 3 people home. What's a good heating temperature?,"Indiana, PA",HVAC,68,6.2,6.2,7.5,8.5,1,6.805
+52,Cold day today with 3 people home. What's a good heating temperature?,"Indiana, PA",HVAC,71,6.0,6.0,8.0,8.0,2,6.7
+53,It's a hot day. What should I set my air conditioning to?,"Meadville, PA",HVAC,73,8.2,8.2,7.8,9.6,2,8.329999999999998
+53,It's a hot day. What should I set my air conditioning to?,"Meadville, PA",HVAC,76,8.4,8.4,9.3,9.6,1,8.76
+53,It's a hot day. What should I set my air conditioning to?,"Meadville, PA",HVAC,79,5.0,5.0,5.5,10.0,3,5.85
+54,I'll be home all day working and it's hot outside. What AC temperature makes sense?,"Greensburg, PA",HVAC,79,5.0,5.0,8.0,9.0,2,6.199999999999999
+54,I'll be home all day working and it's hot outside. What AC temperature makes sense?,"Greensburg, PA",HVAC,81,5.5,5.5,8.0,9.6,1,6.615
+54,I'll be home all day working and it's hot outside. What AC temperature makes sense?,"Greensburg, PA",HVAC,83,4.0,4.0,6.0,8.0,3,5.0
+55,It's a hot day. What should I set my air conditioning to?,"DuBois, PA",HVAC,76,5.0,5.0,8.0,9.8,2,6.319999999999999
+55,It's a hot day. What should I set my air conditioning to?,"DuBois, PA",HVAC,77,5.2,5.2,8.1,10.0,1,6.5
+55,It's a hot day. What should I set my air conditioning to?,"DuBois, PA",HVAC,78,5.2,5.2,6.1,10.0,3,6.1
+56,The house will be empty for 4 hours today. What AC temperature should I set?,"Oil City, PA",HVAC,82,6.8,6.8,5.1,9.6,3,6.879999999999999
+56,The house will be empty for 4 hours today. What AC temperature should I set?,"Oil City, PA",HVAC,76,6.5,6.5,9.0,9.6,1,7.465
+56,The house will be empty for 4 hours today. What AC temperature should I set?,"Oil City, PA",HVAC,70,6.5,6.5,8.0,9.6,2,7.264999999999999
+57,Cold day today with 3 people home. What's a good heating temperature?,"Reading, PA",HVAC,65,5.5,5.5,8.0,7.3,1,6.27
+57,Cold day today with 3 people home. What's a good heating temperature?,"Reading, PA",HVAC,72,4.5,4.5,8.5,7.3,2,5.72
+57,Cold day today with 3 people home. What's a good heating temperature?,"Reading, PA",HVAC,79,4.8,4.8,6.8,7.3,3,5.575
+58,Someone's home all day and it's hot outside. What should I set the AC to?,"Carlisle, PA",HVAC,78,5.0,5.0,8.0,8.0,1,6.05
+58,Someone's home all day and it's hot outside. What should I set the AC to?,"Carlisle, PA",HVAC,80,3.0,3.0,7.0,9.0,3,4.699999999999999
+58,Someone's home all day and it's hot outside. What should I set the AC to?,"Carlisle, PA",HVAC,82,4.0,4.0,6.0,9.0,2,5.1499999999999995
+59,Cold day today with 4 people home. What's a good heating temperature?,"Chambersburg, PA",HVAC,66,0.0,0.0,5.5,7.3,3,2.1950000000000003
+59,Cold day today with 4 people home. What's a good heating temperature?,"Chambersburg, PA",HVAC,69,5.0,5.0,7.0,8.0,1,5.8500000000000005
+59,Cold day today with 4 people home. What's a good heating temperature?,"Chambersburg, PA",HVAC,72,4.0,4.0,8.0,9.0,2,5.549999999999999
+60,It's a cold day. What should I set the thermostat to?,"Gettysburg, PA",HVAC,68,6.0,6.0,8.6,7.3,2,6.714999999999999
+60,It's a cold day. What should I set the thermostat to?,"Gettysburg, PA",HVAC,70,7.0,7.0,8.0,8.0,1,7.3500000000000005
+60,It's a cold day. What should I set the thermostat to?,"Gettysburg, PA",HVAC,72,7.0,7.0,5.0,7.3,3,6.645
+61,I need to dry clothes this afternoon (around 2 PM). When should I start?,"York, PA",Appliance,Dry at 2:00 PM,7.0,4.2,8.6,6.8,2,6.3100000000000005
+61,I need to dry clothes this afternoon (around 2 PM). When should I start?,"York, PA",Appliance,Dry at 2:00 AM,8.0,5.0,2.0,4.0,3,5.15
+61,I need to dry clothes this afternoon (around 2 PM). When should I start?,"York, PA",Appliance,Dry at 9:00 PM,8.5,5.5,6.0,7.0,1,6.725
+62,Dinner's done around 7 PM. What's the best time to run the dishwasher?,"Lancaster, PA",Appliance,Run dishwasher at 7:00 PM,8.6,8.1,10.0,10.0,1,8.915
+62,Dinner's done around 7 PM. What's the best time to run the dishwasher?,"Lancaster, PA",Appliance,Run dishwasher at 5:00 PM,7.5,8.1,8.6,8.3,2,8.049999999999999
+62,Dinner's done around 7 PM. What's the best time to run the dishwasher?,"Lancaster, PA",Appliance,Run dishwasher at 4:00 PM,7.5,8.1,2.9,3.8,3,6.234999999999999
+63,I'm ready to run the dishwasher after dinner (around 8 PM). When should I start it?,"Pittsburgh, PA",Appliance,Run dishwasher at 8:00 PM,9.2,8.6,10.0,10.0,1,9.27
+63,I'm ready to run the dishwasher after dinner (around 8 PM). When should I start it?,"Pittsburgh, PA",Appliance,Run dishwasher at 5:00 PM,7.5,7.8,10.0,10.0,2,8.48
+63,I'm ready to run the dishwasher after dinner (around 8 PM). When should I start it?,"Pittsburgh, PA",Appliance,Run dishwasher at 1:00 AM,9.2,8.6,7.2,5.5,3,8.035
+64,I want to run my dishwasher this afternoon (around 2 PM). When should I start it?,"Harrisburg, PA",Appliance,Run dishwasher at 2:00 PM,7.8,8.1,2.9,3.8,1,6.324999999999999
+64,I want to run my dishwasher this afternoon (around 2 PM). When should I start it?,"Harrisburg, PA",Appliance,Run dishwasher at 10:00 PM,7.5,8.1,2.9,3.8,2,6.234999999999999
+64,I want to run my dishwasher this afternoon (around 2 PM). When should I start it?,"Harrisburg, PA",Appliance,Run dishwasher at 1:00 AM,8.6,7.6,0.0,0.0,3,5.239999999999999
+65,The dishwasher is full (around 1 AM). Should I run it now or delay it?,"Allentown, PA",Appliance,Run dishwasher at 1:00 AM,9.2,8.0,0.5,2.0,2,5.959999999999999
+65,The dishwasher is full (around 1 AM). Should I run it now or delay it?,"Allentown, PA",Appliance,Run dishwasher at 3:00 PM,7.2,7.6,8.6,8.2,1,7.77
+65,The dishwasher is full (around 1 AM). Should I run it now or delay it?,"Allentown, PA",Appliance,Run dishwasher at 11:00 PM,8.9,7.8,1.5,0.0,3,5.7
+66,I'm finally getting to laundry (around 1 AM). When should I start the washer?,"Philadelphia, PA",Appliance,Wash at 1:00 AM,10.0,9.9,0.0,2.0,3,6.765
+66,I'm finally getting to laundry (around 1 AM). When should I start the washer?,"Philadelphia, PA",Appliance,Wash at 7:00 PM,10.0,9.9,0.0,3.8,2,7.035
+66,I'm finally getting to laundry (around 1 AM). When should I start the washer?,"Philadelphia, PA",Appliance,Wash at 3:00 PM,9.8,9.5,6.5,4.0,1,8.165
+67,I have time to do laundry this afternoon (around 5 PM). When should I start?,"Lancaster, PA",Appliance,Wash at 5:00 PM,9.4,9.6,5.6,5.8,2,8.17
+67,I have time to do laundry this afternoon (around 5 PM). When should I start?,"Lancaster, PA",Appliance,Wash at 2:00 PM,8.5,8.5,8.5,8.5,1,8.5
+67,I have time to do laundry this afternoon (around 5 PM). When should I start?,"Lancaster, PA",Appliance,Wash at 10:00 PM,9.1,8.3,2.5,3.9,3,6.72
+68,Planning to run the washing machine around 11 PM. Is that okay or should I wait?,"Pittsburgh, PA",Appliance,Wash at 11:00 PM,9.9,9.8,1.0,3.8,3,7.170000000000001
+68,Planning to run the washing machine around 11 PM. Is that okay or should I wait?,"Pittsburgh, PA",Appliance,Wash at 3:00 PM,9.8,9.8,9.2,4.0,1,8.81
+68,Planning to run the washing machine around 11 PM. Is that okay or should I wait?,"Pittsburgh, PA",Appliance,Wash at 5:00 PM,9.7,9.8,4.6,3.8,2,7.83
+69,I have time to do laundry this afternoon (around 5 PM). When should I start?,"Harrisburg, PA",Appliance,Wash at 5:00 PM,9.8,9.5,7.0,4.5,2,8.34
+69,I have time to do laundry this afternoon (around 5 PM). When should I start?,"Harrisburg, PA",Appliance,Wash at 2:00 PM,9.8,9.5,6.7,4.0,3,8.205
+69,I have time to do laundry this afternoon (around 5 PM). When should I start?,"Harrisburg, PA",Appliance,Wash at 9:00 PM,10.0,9.9,8.6,8.3,1,9.43
+70,Thinking of washing clothes around 4 PM. Good timing?,"Allentown, PA",Appliance,Wash at 4:00 PM,7.5,8.1,2.9,3.8,2,6.234999999999999
+70,Thinking of washing clothes around 4 PM. Good timing?,"Allentown, PA",Appliance,Wash at 1:00 AM,8.8,7.8,1.3,3.8,3,6.2
+70,Thinking of washing clothes around 4 PM. Good timing?,"Allentown, PA",Appliance,Wash at 10:00 PM,7.5,8.1,10.0,10.0,1,8.584999999999999
+71,I have time to do laundry this afternoon (around 4 PM). When should I start?,"Erie, PA",Appliance,Wash at 4:00 PM,9.8,9.6,8.6,8.2,2,9.25
+71,I have time to do laundry this afternoon (around 4 PM). When should I start?,"Erie, PA",Appliance,Wash at 12:00 PM,9.8,9.6,8.5,8.0,3,9.2
+71,I have time to do laundry this afternoon (around 4 PM). When should I start?,"Erie, PA",Appliance,Wash at 9:00 PM,9.8,9.6,8.6,8.3,1,9.265
+72,Thinking of washing clothes around 5 PM. Good timing?,"Scranton, PA",Appliance,Wash at 5:00 PM,7.5,8.1,10.0,10.0,1,8.584999999999999
+72,Thinking of washing clothes around 5 PM. Good timing?,"Scranton, PA",Appliance,Wash at 1:00 AM,9.1,8.1,1.6,2.4,3,6.245
+72,Thinking of washing clothes around 5 PM. Good timing?,"Scranton, PA",Appliance,Wash at 7:00 PM,8.4,8.1,7.3,7.7,2,7.97
+73,It's late (around 7 PM) but I need to wash clothes. Should I do it now?,"Bethlehem, PA",Appliance,Wash at 7:00 PM,9.8,9.5,5.0,7.0,1,8.315
+73,It's late (around 7 PM) but I need to wash clothes. Should I do it now?,"Bethlehem, PA",Appliance,Wash at 2:00 PM,9.8,9.5,0.0,3.8,2,6.835
+73,It's late (around 7 PM) but I need to wash clothes. Should I do it now?,"Bethlehem, PA",Appliance,Wash at 1:00 AM,9.8,9.5,0.0,3.8,3,6.835
+74,I want to run a load of laundry around 5 PM. When's the best time?,"Reading, PA",Appliance,Wash at 5:00 PM,9.7,9.6,6.2,3.8,1,8.08
+74,I want to run a load of laundry around 5 PM. When's the best time?,"Reading, PA",Appliance,Wash at 10:00 PM,9.0,9.5,6.0,5.0,2,7.975
+74,I want to run a load of laundry around 5 PM. When's the best time?,"Reading, PA",Appliance,Wash at 1:00 AM,10.0,10.0,0.0,1.0,3,6.65
+75,Planning to run the washing machine around 9 PM. Is that okay or should I wait?,"York, PA",Appliance,Wash at 9:00 PM,9.8,9.6,8.6,8.2,1,9.25
+75,Planning to run the washing machine around 9 PM. Is that okay or should I wait?,"York, PA",Appliance,Wash at 12:00 AM,10.0,9.6,0.8,4.0,3,7.119999999999999
+75,Planning to run the washing machine around 9 PM. Is that okay or should I wait?,"York, PA",Appliance,Wash at 2:00 PM,9.8,9.6,8.6,8.2,2,9.25
+76,My laundry is ready to dry (around 2 PM). Should I run the dryer now or wait?,"Philadelphia, PA",Appliance,Dry at 2:00 PM,6.8,4.2,8.6,6.8,1,6.25
+76,My laundry is ready to dry (around 2 PM). Should I run the dryer now or wait?,"Philadelphia, PA",Appliance,Dry at 9:00 PM,7.0,4.2,3.0,5.0,3,4.92
+76,My laundry is ready to dry (around 2 PM). Should I run the dryer now or wait?,"Philadelphia, PA",Appliance,Dry at 5:00 PM,6.5,7.0,4.6,3.8,2,5.89
+77,Planning to run the dryer around 2 PM. Is that a good time?,"Lancaster, PA",Appliance,Dry at 2:00 PM,5.0,5.4,7.0,6.0,1,5.6899999999999995
+77,Planning to run the dryer around 2 PM. Is that a good time?,"Lancaster, PA",Appliance,Dry at 12:00 AM,8.5,5.0,0.0,3.0,3,4.75
+77,Planning to run the dryer around 2 PM. Is that a good time?,"Lancaster, PA",Appliance,Dry at 11:00 PM,7.0,4.2,4.0,6.0,2,5.27
+78,I'm ready to dry clothes (around 1 AM). When should I start the dryer?,"Pittsburgh, PA",Appliance,Dry at 1:00 AM,9.0,8.2,0.0,3.0,3,6.02
+78,I'm ready to dry clothes (around 1 AM). When should I start the dryer?,"Pittsburgh, PA",Appliance,Dry at 2:00 PM,6.5,5.4,8.0,7.5,2,6.5649999999999995
+78,I'm ready to dry clothes (around 1 AM). When should I start the dryer?,"Pittsburgh, PA",Appliance,Dry at 8:00 PM,8.5,6.5,7.5,8.0,1,7.5249999999999995
+79,I'm ready to dry clothes (around 8 PM). When should I start the dryer?,"Harrisburg, PA",Appliance,Dry at 8:00 PM,8.0,6.0,9.0,9.0,1,7.6499999999999995
+79,I'm ready to dry clothes (around 8 PM). When should I start the dryer?,"Harrisburg, PA",Appliance,Dry at 10:00 AM,7.4,5.4,10.0,10.0,2,7.61
+79,I'm ready to dry clothes (around 8 PM). When should I start the dryer?,"Harrisburg, PA",Appliance,Dry at 4:00 PM,4.8,5.4,4.6,3.8,3,4.82
+80,Planning to run the dryer around 1 AM. Is that the best time?,"Allentown, PA",Appliance,Dry at 1:00 AM,8.5,6.0,1.0,5.0,1,5.6
+80,Planning to run the dryer around 1 AM. Is that the best time?,"Allentown, PA",Appliance,Dry at 9:00 PM,8.5,6.5,1.0,2.0,2,5.324999999999999
+80,Planning to run the dryer around 1 AM. Is that the best time?,"Allentown, PA",Appliance,Dry at 4:00 PM,4.8,5.4,6.7,4.0,3,5.27
+81,It's late (around midnight) and I need to dry laundry. Should I start now or delay?,"Erie, PA",Appliance,Dry at 12:00 AM,8.5,5.6,2.0,5.0,1,5.66
+81,It's late (around midnight) and I need to dry laundry. Should I start now or delay?,"Erie, PA",Appliance,Dry at 7:00 PM,7.0,4.2,2.9,3.8,2,4.720000000000001
+81,It's late (around midnight) and I need to dry laundry. Should I start now or delay?,"Erie, PA",Appliance,Dry at 3:00 PM,3.5,4.2,0.0,0.0,3,2.52
+82,I'm ready to dry clothes (around midnight). When should I start the dryer?,"Scranton, PA",Appliance,Dry at 12:00 AM,10.0,5.4,0.7,3.8,2,5.6
+82,I'm ready to dry clothes (around midnight). When should I start the dryer?,"Scranton, PA",Appliance,Dry at 10:00 PM,8.5,6.5,9.5,9.0,1,8.075
+82,I'm ready to dry clothes (around midnight). When should I start the dryer?,"Scranton, PA",Appliance,Dry at 4:00 PM,4.8,5.4,6.7,4.0,3,5.27
+83,My laundry is ready to dry (around 4 PM). Should I run the dryer now or wait?,"Bethlehem, PA",Appliance,Dry at 4:00 PM,7.8,8.2,4.6,3.8,2,6.699999999999999
+83,My laundry is ready to dry (around 4 PM). Should I run the dryer now or wait?,"Bethlehem, PA",Appliance,Dry at 10:00 PM,9.0,8.2,6.8,6.5,1,7.904999999999999
+83,My laundry is ready to dry (around 4 PM). Should I run the dryer now or wait?,"Bethlehem, PA",Appliance,Dry at 6:00 AM,8.5,8.2,3.0,2.5,3,6.395
+84,Planning to run the dryer around 3 PM. Is that a good time?,"Reading, PA",Appliance,Dry at 3:00 PM,7.0,5.4,7.0,4.5,1,6.065
+84,Planning to run the dryer around 3 PM. Is that a good time?,"Reading, PA",Appliance,Dry at 11:00 PM,3.5,4.2,2.0,5.0,3,3.67
+84,Planning to run the dryer around 3 PM. Is that a good time?,"Reading, PA",Appliance,Dry at 1:00 AM,7.0,4.2,0.0,2.0,2,3.87
+85,When should I do dishes today?,"York, PA",Appliance,Run dishwasher at 7:00 PM,8.6,7.6,5.1,3.8,1,6.83
+85,When should I do dishes today?,"York, PA",Appliance,Run dishwasher at 10:00 PM,8.6,7.6,0.0,0.0,2,5.239999999999999
+85,When should I do dishes today?,"York, PA",Appliance,Run dishwasher at 1:00 AM,8.6,7.6,0.0,0.0,3,5.239999999999999
+86,What's the ideal shower length?,"Erie, PA",Shower,6,7.5,8.5,8.5,6.5,1,7.8999999999999995
+86,What's the ideal shower length?,"Erie, PA",Shower,9,5.5,7.5,8.5,6.0,3,6.875
+86,What's the ideal shower length?,"Erie, PA",Shower,12,5.6,7.2,10.0,6.2,2,7.13
+87,What's the ideal shower length?,"Scranton, PA",Shower,5,8.5,9.5,6.5,6.5,2,8.15
+87,What's the ideal shower length?,"Scranton, PA",Shower,7,8.5,9.2,7.8,5.9,1,8.215
+87,What's the ideal shower length?,"Scranton, PA",Shower,10,5.6,7.2,10.0,6.2,3,7.13
+88,What's the ideal shower length?,"Bethlehem, PA",Shower,5,8.5,9.6,7.8,7.8,1,8.64
+88,What's the ideal shower length?,"Bethlehem, PA",Shower,10,7.5,8.7,10.0,6.2,2,8.225
+88,What's the ideal shower length?,"Bethlehem, PA",Shower,15,4.3,6.0,5.6,4.5,3,5.185
+89,How long should my showers be?,"Reading, PA",Shower,5,8.5,9.0,8.5,6.5,1,8.375
+89,How long should my showers be?,"Reading, PA",Shower,8,7.2,8.5,8.8,6.5,2,7.869999999999999
+89,How long should my showers be?,"Reading, PA",Shower,12,6.5,7.2,9.5,5.8,3,7.24
+90,How long should my showers be?,"York, PA",Shower,5,8.5,9.5,6.5,4.8,1,7.895
+90,How long should my showers be?,"York, PA",Shower,10,6.7,8.1,9.3,5.1,2,7.469999999999999
+90,How long should my showers be?,"York, PA",Shower,15,5.6,7.2,10.0,6.2,3,7.13
+91,How long should my showers be?,"West Chester, PA",Shower,5,8.5,9.5,8.5,7.5,2,8.7
+91,How long should my showers be?,"West Chester, PA",Shower,7,8.5,9.5,8.8,7.2,1,8.715
+91,How long should my showers be?,"West Chester, PA",Shower,10,7.8,8.9,9.5,6.5,3,8.33
+92,How long should my showers be?,"State College, PA",Shower,6,7.2,8.5,8.5,6.5,1,7.81
+92,How long should my showers be?,"State College, PA",Shower,10,5.2,7.0,8.5,6.0,2,6.609999999999999
+92,How long should my showers be?,"State College, PA",Shower,15,4.3,6.0,5.6,4.5,3,5.185
+93,How long should my showers be?,"Doylestown, PA",Shower,6,8.5,9.6,10.0,7.8,1,9.08
+93,How long should my showers be?,"Doylestown, PA",Shower,9,6.5,7.0,9.0,8.0,3,7.3999999999999995
+93,How long should my showers be?,"Doylestown, PA",Shower,12,7.5,8.7,10.0,6.2,2,8.225
+94,What's the ideal shower length?,"Media, PA",Shower,5,8.5,9.5,7.5,7.0,2,8.425
+94,What's the ideal shower length?,"Media, PA",Shower,8,8.5,9.5,8.5,7.8,1,8.745000000000001
+94,What's the ideal shower length?,"Media, PA",Shower,12,6.5,7.8,8.6,5.0,3,7.1499999999999995
+95,What's the ideal shower length?,"Norristown, PA",Shower,6,7.5,8.5,8.5,6.5,1,7.8999999999999995
+95,What's the ideal shower length?,"Norristown, PA",Shower,10,6.7,8.1,9.3,5.1,2,7.469999999999999
+95,What's the ideal shower length?,"Norristown, PA",Shower,15,4.3,6.0,5.6,4.5,3,5.185
+96,What's the ideal shower length?,"King of Prussia, PA",Shower,6,8.5,9.5,8.5,6.5,2,8.55
+96,What's the ideal shower length?,"King of Prussia, PA",Shower,9,7.5,8.7,10.0,6.2,3,8.225
+96,What's the ideal shower length?,"King of Prussia, PA",Shower,12,8.5,9.6,10.0,7.8,1,9.08
+97,How long should my showers be?,"Pottstown, PA",Shower,5,9.5,9.8,5.1,2.4,3,7.660000000000001
+97,How long should my showers be?,"Pottstown, PA",Shower,8,8.5,9.5,8.5,6.5,1,8.55
+97,How long should my showers be?,"Pottstown, PA",Shower,12,7.5,8.5,10.0,6.5,2,8.2
+98,What's the ideal shower length?,"Exton, PA",Shower,6,8.5,9.6,8.5,7.8,1,8.780000000000001
+98,What's the ideal shower length?,"Exton, PA",Shower,9,6.7,8.1,9.3,5.1,3,7.469999999999999
+98,What's the ideal shower length?,"Exton, PA",Shower,12,7.5,8.7,10.0,6.2,2,8.225
+99,What's the ideal shower length?,"Newtown, PA",Shower,5,8.5,9.5,8.5,6.5,1,8.55
+99,What's the ideal shower length?,"Newtown, PA",Shower,7,7.8,8.9,8.5,6.5,2,8.13
+99,What's the ideal shower length?,"Newtown, PA",Shower,10,7.0,8.0,9.0,6.5,3,7.675
+100,What's the ideal shower length?,"Wilkes-Barre, PA",Shower,2,8.5,9.5,7.5,6.5,2,8.35
+100,What's the ideal shower length?,"Wilkes-Barre, PA",Shower,16,6.5,7.8,8.5,6.2,3,7.31
+100,What's the ideal shower length?,"Wilkes-Barre, PA",Shower,29,8.5,9.5,8.5,7.0,1,8.625

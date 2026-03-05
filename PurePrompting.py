@@ -10,6 +10,34 @@ import requests
 from dotenv import load_dotenv
 import pandas as pd
 
+"""ACROSS ALL THREE ARCHITECTURES
+These sources were used to help build prompts:
+ Prompt engineering components and their citations:
+
+ 1. Role prompting ("You are an expert in [domain]...")
+ Shanahan, M., McDonell, K., & Reynolds, L. (2023).
+ Role play with large language models. Nature, 623(7987), 493–498.
+ https://doi.org/10.1038/s41586-023-06647-8
+
+ 2. Structured output constraint ("return ONLY JSON")
+ Wei, J., et al. (2022). Chain-of-thought prompting elicits reasoning in large language models.
+ NeurIPS 2022. https://proceedings.neurips.cc/paper/2022/file/9d5609613524ecf4f15af0f7b31abca4-Paper-Conference.pdf
+
+ 3. RAG context injection ("use retrieved examples as reference but score independently")
+ Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks.
+ NeurIPS 2020. https://proceedings.neurips.cc/paper/2020/file/6b493230205f780e1bc26945df7481e5-Paper.pdf
+
+ 4. Hybrid parameter extraction ("extract parameters then compute")
+ Khot, T., et al. (2023). Decomposed prompting: A modular approach for solving complex tasks.
+ ICLR 2023. https://arxiv.org/abs/2210.02406
+
+ 5. "Reasonably estimate if not apparent" (bias mitigation)
+ Galaz, V., et al. (2021). Artificial intelligence, systemic risks, and sustainability.
+ Technology in Society, 67, 101741. https://doi.org/10.1016/j.techsoc.2021.101741
+
+"""
+
+
 df = pd.read_csv('TestScenarios.csv', encoding='utf-8-sig')
 print("Columns found:", df.columns.tolist())
 print("First column repr():", repr(df.columns[0]))
@@ -483,8 +511,7 @@ def main():
         logging.error("OPENROUTER_API_KEY not found in .env file")
         return
 
-    # Example: Run on test set
-    test_csv = "TestScenarios.csv"  # User will provide this
+    test_csv = "TestScenarios.csv"
     output_csv = "pure_prompting_results.csv"
 
     logging.info("Starting Pure Prompting Architecture Test...")
@@ -501,9 +528,9 @@ def main():
             missing_cols = [col for col in required_cols if col not in first_row]
 
             if missing_cols:
-                logging.error(f"❌ Missing required columns: {missing_cols}")
+                logging.error(f"Missing required columns: {missing_cols}")
                 logging.error("CSV must have: Question, Decision Type, Alternative 1, Alternative 2, Alternative 3")
-                logging.error("Plus decision-type-specific columns (see documentation)")
+                logging.error("Plus decision-type-specific columns")
                 return
 
             # Check decision types
@@ -511,28 +538,26 @@ def main():
             next(reader)  # Skip header
             decision_types = set([row.get('Decision Type', 'UNKNOWN') for row in reader])
 
-            logging.info(f"✓ CSV validation passed")
+            logging.info(f"CSV validation passed")
             logging.info(f"  Decision types found: {decision_types}")
 
     except FileNotFoundError:
-        logging.error(f"❌ Test file not found: {test_csv}")
+        logging.error(f"Test file not found: {test_csv}")
         return
     except Exception as e:
-        logging.error(f"❌ CSV validation error: {e}")
+        logging.error(f" CSV validation error: {e}")
         return
 
     diagnostics = run_test_set(test_csv, output_csv)
 
-    logging.info("\n" + "="*60)
     logging.info("PURE PROMPTING TEST COMPLETE")
-    logging.info("="*60)
     logging.info(f"Total scenarios: {diagnostics['total_scenarios']}")
     logging.info(f"Total API calls: {diagnostics['total_api_calls']}")
     logging.info(f"Success rate: {diagnostics['success_rate']:.1%}")
     logging.info(f"Average latency: {diagnostics['avg_latency_ms']:.0f} ms")
     logging.info(f"Total tokens (input): {diagnostics['total_tokens_input']}")
     logging.info(f"Total tokens (output): {diagnostics['total_tokens_output']}")
-    logging.info("="*60)
+
 
 
 main()

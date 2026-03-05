@@ -3,59 +3,54 @@ import numpy as np
 from typing import Dict, List, Tuple
 import pandas as pd
 class ShowerGroundTruthCalculator:
-    """
-    Calculate physics-based ground truth scores for shower duration decisions.
-
-    Energy consumption based on water heating physics, comfort based on duration
-    and temperature adequacy, practicality based on behavioral adoption and
-    hot water capacity constraints.
-
-    Key Citations:
-    - REU2016 (Residential End Uses of Water): Average shower 7.8 min at 2.1 GPM
-    - Rinnai/Chronomite groundwater temperature maps: PA inlet temps 52-57°F annual
-    - DOE/Rheem water heater specs: Electric tank UEF 0.92 typical for 40-50 gal
-    - CDC/OSHA Legionella control: 140°F storage, 120°F delivery optimal
-    - Healthline/dermatology: 5-10 min recommended shower duration
-    """
-
-    # EPA eGRID2022: Pennsylvania grid emissions 0.85 lb CO2/kWh
-    # Citations: EPA eGRID2022 [Ref 77,81], PA DEP 2021 [Ref 29,32]
+    """"Key sources:
+- Residential End Uses of Water, Version 2 (REU2016). Water Research Foundation.
+  Average shower 7.8 min; 0.9 showers/person/day.
+- Hendron, R., & Burch, J. (2008). NREL/TP-550-40874. Mains temp model.
+- Maguire, J., et al. (2013). NREL/TP-5500-58756. Hot water distribution validation.
+- Rheem Manufacturing Company. (2025). Electric Tank Water Heaters — Product Specs.
+- Centers for Disease Control and Prevention (CDC). (2026).
+  Monitoring Building Water: A Vital Step for Control of Legionella.
+- Zhang, D., Mui, K.-W., & Wong, L.-T. (2023). Buildings, 13(5), 1300.
+"""
+    # PA CO2 intensity from EPA eGRID2023 Detailed Data (EPA, 2025)
     EMISSIONS_FACTOR_PA = 0.6458  # lbs CO2/kWh
 
-    # EIA 2024-2025: Pennsylvania residential average
-    # Citations: EIA state data [Ref 29], PA suppliers [Ref 28]
-    ELECTRICITY_RATE_PA = 0.19  # $/kWh
+    # PA residential electricity price from EIA FAQ (EIA, 2022).
+    ELECTRICITY_RATE_PA = 0.19  # dollars per/kWh
 
-    # Rinnai/Chronomite groundwater maps: PA in 52-57°F band annual average
-    # Seasonal variation: winter dips to high 40s, summer rises to mid 60s
-    INLET_TEMP_WINTER = 45  # °F, outdoor <40°F (Rinnai/Chronomite)
-    INLET_TEMP_SPRING_FALL = 55  # °F, outdoor 40-70°F (PA 52-57°F band)
-    INLET_TEMP_SUMMER = 65  # °F, outdoor >70°F (seasonal rise)
+    # PA seasonal mains water temperatures.
+    # Sources: Hendron & Burch (2008), NREL/TP-550-40874; Maguire et al. (2013), NREL/TP-5500-58756.
+    INLET_TEMP_WINTER = 45  # F, outdoor <=32F
+    INLET_TEMP_SPRING_FALL = 55  # F, outdoor 32-75F
+    INLET_TEMP_SUMMER = 65  # F, outdoor >=75F
 
-    # DOE standards and manufacturer specs
-    ELECTRIC_HEATER_EFFICIENCY = 0.92  # UEF 0.90-0.93 for 40-50 gal electric (DOE/Rheem)
+    # UEF 0.90-0.93 for 40-55 gal electric tank.
+    # Source: Rheem Manufacturing Company. (2025). Residential Tank Water Heaters
+    #         Product Specifications (electric models 40-55 gal). Midpoint: 0.92.
+    ELECTRIC_HEATER_EFFICIENCY = 0.92
     HOT_WATER_FRACTION = 0.65  # Fraction of shower water from hot side (mixing physics)
     WATER_DENSITY = 8.33  # lbs/gallon (standard)
     BTU_PER_KWH = 3412  # Conversion factor (standard)
 
-    # REU2016: Average US shower 7.8 minutes
-    # Healthline/dermatology: 5-10 min recommended
-    COMFORT_DURATION_MIN = 5  # Rushed but viable (bottom of recommended range)
-    COMFORT_DURATION_OPTIMAL = 8  # US average from REU2016 (7.8 min)
-    COMFORT_DURATION_MAX = 12  # Comfortable upper bound (typical 5-15 min range)
+    # Duration comfort thresholds.
+    # Average 7.8 min from REU2016 (Water Research Foundation).
+    # Long-duration prevalence (33% >15 min) from The Harris Poll (2024).
+    COMFORT_DURATION_MIN = 5  # Rushed but viable
+    COMFORT_DURATION_OPTIMAL = 7.8  # REU2016 average of 7.8 min
+    COMFORT_DURATION_MAX = 15  # Comfortable upper bound
 
-    # CDC/OSHA/ASHRAE temperature standards
-    HEATER_TEMP_MINIMUM = 110  # °F, below this feels lukewarm
-    HEATER_TEMP_OPTIMAL = 120  # °F, standard residential setpoint
-    HEATER_TEMP_SCALD_RISK = 130  # °F, scald risk increases above this
-    HEATER_TEMP_LEGIONELLA_SAFE = 140  # °F, CDC/OSHA storage recommendation
-
-    # Behavioral adoption estimates (modeled from REU2016 distribution)
+    # Temperature thresholds from CDC Legionella guidance (CDC, 2026):store at >=140F; deliver/recirculate at >=120F.
+    HEATER_TEMP_MINIMUM = 110  # F, lukewarm boundary
+    HEATER_TEMP_OPTIMAL = 120  # F, standard delivery setpoint (CDC, 2026)
+    HEATER_TEMP_SCALD_RISK = 130  # F, scald risk threshold
+    HEATER_TEMP_LEGIONELLA_SAFE = 140  # F, CDC minimum storage temp (CDC, 2026)
+     # Behavioral adoption estimates (modeled from REU2016 distribution)
     PRACTICALITY_SHORT_ADOPTION = 0.30  # ~30% maintain <7 min without intervention
     PRACTICALITY_MEDIUM_ADOPTION = 0.65  # ~65% maintain 8-10 min (Harris Poll)
 
     # Tank capacity standards
-    TANK_RECOVERY_ELECTRIC = 21  # GPH @ 90°F rise (plumbing guides)
+    TANK_RECOVERY_ELECTRIC = 21  # GPH at 90F rise (plumbing guides)
     FIRST_HOUR_RATING_40GAL = 50  # Gallons available in first hour
     # Linear VF for energy cost - equal marginal utility across range
     # Dyer & Sarin (1979): "For monetary attributes with small stakes relative to wealth,
@@ -66,20 +61,16 @@ class ShowerGroundTruthCalculator:
     # Kotchen & Moore (2007): "When environmental impacts are framed in absolute physical
     # units (tons CO₂, lbs emissions), people exhibit approximately linear preferences"
     # (J. Environmental Economics and Management 54(1):100-123)
+    # Log/exponential value function and alpha parameters inspired by Thaler 1999; Heath & Soll 1996; Prelec & Loewenstein 1998.
     VF_ENVIRONMENTAL = "linear"
-
-    # test if needs adjustment
     VF_COMFORT = "logarithmic, a=1.5"
     VF_PRACTICALITY = "logarithmic, a=1.2"
 
     REFERENCE_RANGES = {
         'energy_cost': {
-            # Q23: Shower energy cost ranges in PA (electric, 0.9-0.95 efficiency)
-            # Min: 5 min, 2.0 GPM, ΔT≈50°F (summer 55→105°F)
-            #      1.3 kWh × $0.19 = $0.25 (use 0.20 for 5th percentile)
-            # Max: 15 min, 2.5 GPM, ΔT≈70°F (winter 50→120°F)
-            #      6.9 kWh × $0.19 = $1.31 (use 1.40 for 95th percentile)
-            # Citations: Q23, Q17-Q19 [Ref 57,58,33,31,28]
+            # Min (short, summer, efficient): REU2016 short-duration + NREL summer inlet temp + EIA (2022) rate
+            # Max (long, winter, high-temp): Harris Poll (2024) long-duration + NREL winter inlet temp + EIA (2022) rate
+
             'min': 0.20,
             'max': 1.40,
             'decreasing': True
@@ -88,7 +79,7 @@ class ShowerGroundTruthCalculator:
             # Derived from energy bounds × emissions factor
             # Min: 1.3 kWh × 0.85 = 1.11 lbs CO2 (round to 1.10)
             # Max: 6.9 kWh × 0.85 = 5.87 lbs CO2 (round to 5.90)
-            # Citations: EPA eGRID2022 [Ref 77,29], Q18-Q19 [Ref 57,58,33]
+            # Citations: EPA eGRID2023
             'min': 1.10,
             'max': 5.90,
             'decreasing': True
@@ -110,28 +101,15 @@ class ShowerGroundTruthCalculator:
         """
         Determine inlet (cold) water temperature based on outdoor temperature.
 
-        Q17 Research: Linear interpolation for PA inlet water temperature
-        Based on NREL mains temp models [Ref 53,54] and Philadelphia data [Ref 52,56]
+        Model basis: Hendron, R., & Burch, J. (2008). NREL/TP-550-40874.
+             Maguire, J., et al. (2013). NREL/TP-5500-58756.
 
-        Formula: inlet = 45 + (outdoor - 32) × (20/43)
-        - outdoor ≤32°F → inlet = 45°F (winter minimum)
-        - outdoor = 75°F → inlet = 65°F (summer maximum)
-        - Linear between these points
-
-        Examples:
-        - 28°F outdoor → 45°F inlet (winter, capped)
-        - 55°F outdoor → 55.7°F inlet
-        - 85°F outdoor → 65°F inlet (summer, capped)
-
-        ΔT Impact:
-        - Winter: 120°F - 45°F = 75°F rise (36% more energy than summer)
-        - Summer: 120°F - 65°F = 55°F rise
 
         Args:
-            outdoor_temp: Outdoor temperature in °F
+            outdoor_temp: Outdoor temperature in  degrees F
 
         Returns:
-            Inlet water temperature in °F
+            Inlet water temperature in  degrees F
         """
         if outdoor_temp <= 32:
             return 45.0  # Winter minimum
@@ -148,12 +126,12 @@ class ShowerGroundTruthCalculator:
         Calculate energy consumption for shower in kWh.
 
         Physics-based formula:
-        Energy (kWh) = (GPM × 8.33 lbs/gal × ΔT°F × duration_min) / (3412 BTU/kWh × efficiency)
+        Energy (kWh) = (GPM × 8.33 lbs/gal × change in T degrees F × duration_min) / (3412 BTU/kWh × efficiency)
 
         Args:
             duration_min: Shower duration in minutes
             gpm: Flow rate in gallons per minute
-            water_heater_temp: Water heater setpoint temperature in °F
+            water_heater_temp: Water heater setpoint temperature in  degrees F
             outdoor_temp: Outdoor temperature (for inlet temp determination)
 
         Returns:
@@ -214,7 +192,7 @@ class ShowerGroundTruthCalculator:
 
         Args:
             duration: Shower duration in minutes
-            water_heater_temp: Water heater setpoint in °F
+            water_heater_temp: Water heater setpoint in  degrees F
             occupants: Number of household occupants
 
         Returns:
@@ -269,7 +247,7 @@ class ShowerGroundTruthCalculator:
             Practicality score (0-10)
         """
         # Behavioral adoption likelihood by duration
-        # Harris Poll (2024, n=2000): 33% of US adults shower >15 min; REUS 2016: metered
+        # The Harris Poll (2024, n=2000): 33% of US adults shower >15 min; REUS 2016: metered
         # average 7.8 min suggesting <15 min is normative behavior
         # Gen Z skews higher (54% >15 min) but metered data suggests self-report overestimation
         if duration <= 5:
@@ -309,7 +287,7 @@ class ShowerGroundTruthCalculator:
         """
         Convert per-shower cost to estimated monthly cost.
 
-        Q21: Average 0.9 showers per person per day [REU2016]
+        showers_per_person_per_day=0.9  # REU2016 average [Water Research Foundation]
 
         Args:
             per_shower_cost: Cost per shower ($)
@@ -326,6 +304,12 @@ class ShowerGroundTruthCalculator:
     def calculate_budget_penalty(monthly_cost: float, monthly_budget: float) -> float:
         """
         Calculate budget constraint penalty multiplier.
+        - <80%  : No penalty. Thaler, R. (1999). J. Behavioral Decision Making, 12, 183-206.
+    - 80-100%: Linear decline. Heath, C., & Soll, J. B. (1996). J. Consumer Research, 23(1), 40-52.
+    - 100-150%: Exponential decline. Prelec & Loewenstein (1998). Marketing Science, 17(1), 4-28.
+            Energy-specific: Heutel, G. (2017). NBER WP 23692.
+    - >150%  : Eliminated. Gathergood, J. (2012). J. Economic Psychology, 33(3), 590-602.
+
         """
         if monthly_budget <= 0:
             return 1.0
@@ -451,13 +435,10 @@ class ShowerGroundTruthCalculator:
         outdoor_temp = float(scenario.get('Outdoor Temp', 50))
         water_heater_temp = float(scenario.get('Water Heater Temp', 120))
 
-        print(f"\n{'=' * 60}")
         print(f"SHOWER SCENARIO: {scenario.get('Description', 'N/A')}")
         print(f"Location: {location}")
         print(f"Occupants: {occupants} | Tank: {tank_size} gal | Flow: {gpm} GPM")
-        print(f"Outdoor: {outdoor_temp}°F | Heater: {water_heater_temp}°F")
-        print(f"{'=' * 60}")
-
+        print(f"Outdoor: {outdoor_temp} degrees F | Heater: {water_heater_temp} degrees F")
         alternatives = []
         for i in range(1, 4):
             alt_key = f'Alternative {i}'
@@ -602,11 +583,10 @@ class ShowerGroundTruthCalculator:
                 'practicality': round(practicality_vf, 2)
             }
 
-            print(f"  → FINAL SCORES:")
+            print(f" fINAL SCORES:")
             print(f"     Energy: {energy_vf:.2f}, Environmental: {env_vf:.2f}, "
                   f"Comfort: {comfort_vf:.2f}, Practicality: {practicality_vf:.2f}\n")
 
-        print(f"\n{'=' * 60}\n")
 
         return {
             'scenario': scenario.get('Description', 'N/A'),

@@ -42,7 +42,7 @@ try:
     embedding_model = SentenceTransformer(EMBEDDING_MODEL)
     print(f"✓ Loaded RAG database: {chroma_collection.count()} scenarios available")
 except Exception as e:
-    print(f"⚠ WARNING: Could not load RAG database: {e}")
+    print(f" WARNING: Could not load RAG database: {e}")
     print("  Make sure to run build_rag_database.py first!")
     chroma_collection = None
     embedding_model = None
@@ -127,10 +127,6 @@ Return ONLY a JSON object with four numeric scores (0-10):
 def format_scenario_text_for_retrieval(scenario: Dict) -> Tuple[str, str]:
     """
     Convert scenario to text for RAG retrieval.
-
-    CRITICAL FIX: Now reads 'Decision Type' from CSV parameter instead of
-    keyword detection. This ensures correct retrieval filtering.
-
     Returns:
         (scenario_text, decision_type)
     """
@@ -165,7 +161,7 @@ def format_scenario_text_for_retrieval(scenario: Dict) -> Tuple[str, str]:
         )
     else:
         scenario_text = scenario.get('Question', f'Unknown decision type: {decision_type}')
-        print(f"  ⚠ Warning: Unknown decision type '{decision_type}'")
+        print(f"   Warning: Unknown decision type '{decision_type}'")
 
     return scenario_text, decision_type
 
@@ -181,7 +177,7 @@ def retrieve_similar_scenarios(scenario: Dict, k: int = RETRIEVE_K) -> List[Dict
         List of dicts with retrieved scenario info and scores
     """
     if chroma_collection is None or embedding_model is None:
-        print("  ⚠ RAG database not available, skipping retrieval")
+        print("   RAG database not available, skipping retrieval")
         return []
 
     # Convert scenario to text
@@ -198,7 +194,7 @@ def retrieve_similar_scenarios(scenario: Dict, k: int = RETRIEVE_K) -> List[Dict
             where={"decision_type": decision_type}
         )
     except Exception as e:
-        print(f"  ⚠ Retrieval error: {e}")
+        print(f"   Retrieval error: {e}")
         return []
 
     retrieved = []
@@ -343,7 +339,7 @@ def parse_llm_scores(response_text: str) -> Dict[str, float]:
         except:
             pass
 
-    print("  ⚠ Could not parse scores — marking as FAILED")
+    print("   Could not parse scores; failed")
     return {'energy_cost': None, 'environmental': None, 'comfort': None, 'practicality': None, '_failed': True}
 
 
@@ -456,7 +452,7 @@ def run_scenario(scenario: Dict) -> Dict:
 
         scores, diagnostics = score_alternative_with_rag(scenario, alternative)
         if scores.get('_failed'):
-            print(f"  ✗ FAILED — skipping alternative")
+            print(f" FAILED — skipping alternative")
             total_diagnostics['failed_calls'] += 1
             alternatives_scores.append({
                 'alternative': alternative,
@@ -515,10 +511,7 @@ def run_test_set(test_csv_path: str, output_csv_path: str,
     """
     import csv as csv_module
 
-    # Validate CSV
-    print(f"\n{'=' * 70}")
     print(f"RAG-ENHANCED MCDA ARCHITECTURE - TEST SET")
-    print(f"{'=' * 70}\n")
 
     print(f"Loading test scenarios from: {test_csv_path}")
 
@@ -532,7 +525,7 @@ def run_test_set(test_csv_path: str, output_csv_path: str,
         missing_cols = [col for col in required_cols if col not in first_row]
 
         if missing_cols:
-            raise ValueError(f"❌ Missing required columns: {missing_cols}")
+            raise ValueError(f" Missing required columns: {missing_cols}")
 
         scenarios.append(first_row)
         scenarios.extend(list(reader))
@@ -629,11 +622,7 @@ def run_test_set(test_csv_path: str, output_csv_path: str,
 
     print(f"✓ Diagnostics saved to: {output_diagnostics_path}")
 
-    # Print summary
-    print(f"\n{'=' * 70}")
     print(f"RAG-ENHANCED TEST COMPLETE")
-    print(f"{'=' * 70}")
-    # REPLACE with:
     print(f"Total scenarios: {cumulative_diagnostics['total_scenarios']}")
     print(f"Total API calls: {cumulative_diagnostics['total_api_calls']}")
     print(f"Successful calls: {cumulative_diagnostics['successful_calls']}")
@@ -645,21 +634,18 @@ def run_test_set(test_csv_path: str, output_csv_path: str,
 
     return cumulative_diagnostics
 
-
-# Add main execution block
 if __name__ == "__main__":
     import sys
 
-    # Check for required files
     test_csv = 'TestScenarios.csv'
 
     if not os.path.exists(test_csv):
-        print(f"❌ ERROR: Test scenarios file not found: {test_csv}")
+        print(f"Test scenarios file not found: {test_csv}")
         print("Please upload your test scenarios CSV first.")
         sys.exit(1)
 
     if chroma_collection is None:
-        print(f"❌ ERROR: RAG database not available.")
+        print(f"RAG database not available.")
         print("Please run build_rag_database.py first to create the RAG database.")
         sys.exit(1)
 

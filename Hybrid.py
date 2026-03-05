@@ -175,9 +175,6 @@ def query_openrouter(messages: List[Dict], model: str = MODEL_ID,
     raise Exception(f"Failed to get response after {MAX_RETRIES} attempts")
 
 
-# Decision type detection and calculator selection now handled in unified extraction
-# No separate functions needed
-
 
 def format_scenario_for_extraction(scenario: Dict) -> str:
     """
@@ -191,24 +188,7 @@ def format_scenario_for_extraction(scenario: Dict) -> str:
 
 
 def extract_all_with_ai(scenario: Dict) -> Tuple[Optional[Dict], Dict]:
-    """
-    UNIFIED AI EXTRACTION - Single call extracts everything:
-    1. Decision type classification
-    2. Parameters for that decision type
-    3. Calculator selection
-
-    NO FALLBACKS - Returns None on failure.
-
-    Returns:
-        (extraction_result_dict, diagnostics)
-
-        extraction_result_dict structure:
-        {
-            'decision_type': 'HVAC'|'Appliance'|'Shower',
-            'calculator': 'HVACGroundTruthCalculator'|...,
-            'parameters': {...}  # Decision-type specific
-        }
-    """
+    
     scenario_text = format_scenario_for_extraction(scenario)
     question = scenario.get('Question', '')
 
@@ -307,10 +287,7 @@ def score_with_ground_truth(extracted_result: Dict, scenario: Dict) -> List[Dict
 
     calculator_name = extracted_result['calculator']
     print(f"  Using AI-selected calculator: {calculator_name}")
-    print(f"  DEBUG: gt_scenario keys = {sorted(gt_scenario.keys())}")
-    print(
-        f"  DEBUG: Types - household_size: {type(gt_scenario.get('household_size'))}, outdoor_temp: {type(gt_scenario.get('outdoor_temp'))}")
-
+    
     if calculator_name == 'HVACGroundTruthCalculator':
         calc = HVACGroundTruthCalculator()
         result = calc.calculate_scenario_scores(gt_scenario)
@@ -390,11 +367,9 @@ def run_scenario(scenario: Dict) -> Dict:
     Returns:
         Dict with results and diagnostics
     """
-    print(f"\n{'=' * 70}")
+  
     print(f"SCENARIO: {scenario.get('Question', 'N/A')}")
-    print(f"{'=' * 70}")
-
-    # Step 1: SINGLE AI CALL - extract everything
+   
     print(f"AI extracting all information (decision type + parameters + calculator)...")
 
     extraction_result, extraction_diag = extract_all_with_ai(scenario)
@@ -433,7 +408,7 @@ def run_scenario(scenario: Dict) -> Dict:
     calculator = extraction_result['calculator']
     parameters = extraction_result['parameters']
 
-    print(f"  ✓ Extraction succeeded")
+    print(f"   Extraction succeeded")
     print(f"  Decision type: {decision_type}")
     print(f"  Calculator: {calculator}")
     print(f"  Parameters: {parameters}")
@@ -519,10 +494,6 @@ def run_test_set(test_csv_path: str, output_csv_path: str,
     """
     import csv as csv_module
 
-    # Validate CSV
-    print(f"\n{'=' * 70}")
-    print(f"HYBRID MCDA ARCHITECTURE - TEST SET")
-    print(f"{'=' * 70}\n")
 
     print(f"Loading test scenarios from: {test_csv_path}")
 
@@ -536,12 +507,12 @@ def run_test_set(test_csv_path: str, output_csv_path: str,
         missing_cols = [col for col in required_cols if col not in first_row]
 
         if missing_cols:
-            raise ValueError(f"❌ Missing required columns: {missing_cols}")
+            raise ValueError(f" Missing required columns: {missing_cols}")
 
         scenarios.append(first_row)
         scenarios.extend(list(reader))
 
-    print(f"✓ Loaded {len(scenarios)} test scenarios")
+    print(f" Loaded {len(scenarios)} test scenarios")
     print(f"  Decision types: {set([s.get('Decision Type', 'UNKNOWN') for s in scenarios])}\n")
 
     # Process all scenarios
@@ -580,7 +551,6 @@ def run_test_set(test_csv_path: str, output_csv_path: str,
             cumulative_diagnostics['successful_calls'] /
             max(cumulative_diagnostics['total_api_calls'], 1)
     )
-    # Save results to CSV
     print(f"\nSaving results to: {output_csv_path}")
 
     with open(output_csv_path, 'w', newline='', encoding='utf-8-sig') as f:
@@ -632,7 +602,7 @@ def run_test_set(test_csv_path: str, output_csv_path: str,
                     'weighted_score': weighted_score
                 })
 
-    print(f"✓ Results saved to: {output_csv_path}")
+    print(f" Results saved to: {output_csv_path}")
 
     # Save diagnostics
     print(f"Saving diagnostics to: {output_diagnostics_path}")
@@ -640,13 +610,10 @@ def run_test_set(test_csv_path: str, output_csv_path: str,
     with open(output_diagnostics_path, 'w', encoding='utf-8-sig') as f:
         json.dump(cumulative_diagnostics, f, indent=2)
 
-    print(f"✓ Diagnostics saved to: {output_diagnostics_path}")
+    print(f" Diagnostics saved to: {output_diagnostics_path}")
 
-    # Print summary
-    print(f"\n{'=' * 70}")
+
     print(f"HYBRID TEST COMPLETE")
-    print(f"{'=' * 70}")
-    # REPLACE the print statements with:
     print(f"Total scenarios: {cumulative_diagnostics['total_scenarios']}")
     print(f"Total API calls: {cumulative_diagnostics['total_api_calls']}")
     print(f"Successful calls: {cumulative_diagnostics['successful_calls']}")
@@ -659,32 +626,26 @@ def run_test_set(test_csv_path: str, output_csv_path: str,
     return cumulative_diagnostics
 
 
-# Add main execution block
 if __name__ == "__main__":
     import sys
-
-    # Check for required files
     test_csv = 'TestScenarios.csv'
 
     if not os.path.exists(test_csv):
-        print(f"❌ ERROR: Test scenarios file not found: {test_csv}")
+        print(f" ERROR: Test scenarios file not found: {test_csv}")
         print("Please upload your test scenarios CSV first.")
         sys.exit(1)
 
-    # Check ground truth calculators are available
     try:
         from HVACGroundTruthCalculator import HVACGroundTruthCalculator
         from ApplianceGroundTruthCalculator import ApplianceGroundTruthCalculator
         from ShowerGroundTruthCalculator import ShowerGroundTruthCalculator
 
-        print("✓ Ground truth calculators loaded")
+        print(" Ground truth calculators loaded")
     except ImportError as e:
-        print(f"❌ ERROR: Could not load ground truth calculators: {e}")
-        print("Please ensure HVACGroundTruthCalculator.py, ApplianceGroundTruthCalculator.py,")
-        print("and ShowerGroundTruthCalculator.py are in the same directory.")
+        print(f" ERROR: Could not load ground truth calculators: {e}")
+        print("Please ensure HVACGroundTruthCalculator.py, ApplianceGroundTruthCalculator.py, and ShowerGroundTruthCalculator.py are in the same directory.")
         sys.exit(1)
 
-    # Run test set
     run_test_set(
         test_csv_path=test_csv,
         output_csv_path=OUTPUT_CSV,

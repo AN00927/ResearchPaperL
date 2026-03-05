@@ -6,15 +6,11 @@ from typing import Dict, List, Tuple
 
 
 class HVACGroundTruthCalculator:
-    # EPA eGRID2022: Pennsylvania grid emissions 0.85 lb CO2/kWh
-    # Generation mix: 40-45% gas, 30-35% nuclear, 15-20% coal
-    # Citations: EPA eGRID2022 [Ref 77,81], PA DEP 2021 [Ref 29,32]
+    # PA CO2 intensity from EPA eGRID2023 Detailed Data (EPA, 2025)
     EMISSIONS_FACTOR_PA = 0.6458  # lbs CO2/kWh
 
-    # EIA 2024-2025: Pennsylvania residential average
-    # PPL: 19-20¢, PECO: 17-18¢, Duquesne: 18-19¢
-    # Citations: EIA state data [Ref 29], PA suppliers [Ref 28]
-    ELECTRICITY_RATE_PA = 0.19  # $/kWh
+    # PA residential electricity price from EIA FAQ (EIA, 2022).
+    ELECTRICITY_RATE_PA = 0.19  # dollars per/kWh
     SUMMER_COMFORT_RANGE = (73, 79)
     SUMMER_OPTIMAL = 76
     WINTER_COMFORT_RANGE = (68, 75)
@@ -23,14 +19,13 @@ class HVACGroundTruthCalculator:
     # Linear VF for energy cost - equal marginal utility across range
     # Dyer & Sarin (1979): "For monetary attributes with small stakes relative to wealth,
     # linear utility is appropriate" (Management Science 26(8):810-822)
-    # Newsham & Bowker (2010): TOU pricing shows linear elasticity regardless of starting
-    # price level (Energy Policy 38:3289-3296)
     VF_ENERGY_COST = "linear"
 
     # Linear VF for environmental impact - physical units have linear marginal value
     # Kotchen & Moore (2007): "When environmental impacts are framed in absolute physical
     # units (tons CO₂, lbs emissions), people exhibit approximately linear preferences"
     # (J. Environmental Economics and Management 54(1):100-123)
+    # Log/exponential value function and alpha parameters inspired by Thaler 1999; Heath & Soll 1996; Prelec & Loewenstein 1998.
     VF_ENVIRONMENTAL = "linear"
     VF_COMFORT = "logarithmic, a=1.5"
     VF_PRACTICALITY = "logarithmic, a=1.2"
@@ -38,8 +33,9 @@ class HVACGroundTruthCalculator:
                                square_footage: int, r_value: int) -> float:
         """
         Calculate cooling load using ASHRAE cooling load temperature difference method.
+        Sources: ASHRAE Standard 55 — Thermal Environmental Conditions for Human Occupancy.
+         Wu, W., Skye, H. M., & Domanski, P. A. (2018). Applied Energy, 212, 577-591.
 
-        Citation: ASHRAE Handbook—Fundamentals (2021), Chapter 18
         """
         delta_t = outdoor_temp - indoor_temp
 
@@ -57,15 +53,16 @@ class HVACGroundTruthCalculator:
         ventilation_load = conductive_load * 0.20
 
         total_load = conductive_load + internal_gains + solar_gains + ventilation_load
-        print(f"  → Load calculated: {total_load:,.0f} BTU/hr")
+        print(f"  to Load calculated: {total_load:,.0f} BTU/hr")
         return max(0, total_load)
 
     def calculate_heating_load(self, outdoor_temp: float, indoor_temp: float,
                                square_footage: int, r_value: int) -> float:
         """
         Calculate heating load using ASHRAE heat loss method.
+        Sources: ASHRAE Standard 55 — Thermal Environmental Conditions for Human Occupancy.
+         Wu, W., Skye, H. M., & Domanski, P. A. (2018). Applied Energy, 212, 577-591.
 
-        Citation: ASHRAE Handbook—Fundamentals (2021), Chapter 18
         """
         delta_t = indoor_temp - outdoor_temp
 
@@ -80,7 +77,7 @@ class HVACGroundTruthCalculator:
         infiltration_loss = conductive_loss * 0.25
 
         total_load = conductive_loss + infiltration_loss - internal_gains
-        print(f"  → Load calculated: {total_load:,.0f} BTU/hr")
+        print(f"  to Load calculated: {total_load:,.0f} BTU/hr")
         return max(0, total_load)
 
     def calculate_energy_consumption(self, load_btu_hr: float, seer: int,
@@ -89,26 +86,23 @@ class HVACGroundTruthCalculator:
         """
         Calculate energy consumption in kWh with age degradation.
 
-        Q1 Research: Linear capped degradation model
-        - With maintenance: 0.25-1%/year degradation
-        - Without maintenance: 1-2%/year degradation
-        - Pattern: Front-loaded (rapid early drop + slower tail), not exponential
-        - Maximum: 20-30% loss after 20-25 years for working systems
 
-        Citations: NIST/ASHRAE fault studies [Ref 1,2], Parker field evals [Ref 3],
-                   CA utility studies [Ref 4,5]
+        Sources: Domanski, P. A., Henderson, H. I., & Payne, W. V. (2014). NIST TN 1848.
+         Fenaughty, K., & Parker, D. (2018). FSEC-PF-474-18, Florida Solar Energy Center.
+         Davis Energy Group, Inc. (2010). HVAC Energy Efficiency Maintenance Study (CALMAC).
+
 
         Args:
             load_btu_hr: Cooling/heating load (BTU/hr)
             seer: Nameplate SEER rating
             hvac_age: System age (years)
             hours: Operating hours
-            maintenance_level: 'good', 'moderate', or 'poor'
 
         Returns:
             Energy consumption in kWh
         """
         # Base degradation rates by maintenance level
+        #Rates from Domanski et al. 2014 (NIST TN 1848) and Davis Energy Group 2010.
         maintenance_rates = {
             'good': 0.005,  # 0.5%/year with annual/biannual maintenance
             'moderate': 0.010,  # 1.0%/year with occasional maintenance
@@ -136,7 +130,7 @@ class HVACGroundTruthCalculator:
         # Calculate effective SEER after degradation
         effective_seer = seer * (1 - total_degradation)
 
-        print(f"  → SEER degradation: {seer} → {effective_seer:.1f} "
+        print(f"  to SEER degradation: {seer} to {effective_seer:.1f} "
               f"(age={hvac_age}yr, {maintenance_level}, {total_degradation * 100:.1f}% loss)")
 
         # Convert SEER to EER (approximate relationship)
@@ -155,7 +149,7 @@ class HVACGroundTruthCalculator:
             runtime_multiplier = 1.0
         total_kwh = kw * hours * runtime_multiplier
 
-        print(f"  → Energy consumption: {total_kwh:.2f} kWh over {hours} hours")
+        print(f"  to Energy consumption: {total_kwh:.2f} kWh over {hours} hours")
         return total_kwh
 
     def calculate_comfort_score(self, indoor_temp: float, outdoor_temp: float,
@@ -164,9 +158,13 @@ class HVACGroundTruthCalculator:
         Calculate comfort score using ASHRAE 55 with adaptive comfort considerations.
 
         Citations:
-        - Dear & Brager (2002). Energy and Buildings, 34:549-561 (adaptive comfort)
-        - Wang & Hong (2020). Renewable & Sustainable Energy Reviews (occupant preferences)
-        - Wu et al. (2018). Applied Energy, 212:577-591 (comfort ranges)
+        - Sources:
+        ASHRAE Standard 55. Baseline comfort ranges: 73-79F cooling, 68-75F heating.
+        Wu, W., et al. (2018). Applied Energy, 212, 577-591. Optimal setpoints.
+         de Dear, R., & Brager, G. (2002). Energy and Buildings, 34, 549-561.
+        tolerance +/-2F when outdoor 60-85F.
+        Wang, Z., & Hong, T. (2020). RSER, 119, 109593.
+
         """
         if outdoor_temp > 75:
             optimal = 76
@@ -188,9 +186,7 @@ class HVACGroundTruthCalculator:
                 range_violation = comfort_min - indoor_temp
             else:
                 range_violation = indoor_temp - comfort_max
-            # Wang & Hong (2020): "Observed acceptable temperature ranges span 7-12°C
-            # (13-22°F), suggesting people tolerate wider ranges than ASHRAE 55 specifies"
-            # Renewable & Sustainable Energy Reviews, DOI: 10.1016/j.rser.2019.109593
+            # Partial comfort score. Wang & Hong 2020, RSER, 119, 109593.
             comfort_score = 6 - (range_violation)
 
         if household_size > 3:
@@ -199,8 +195,7 @@ class HVACGroundTruthCalculator:
 
         return max(0, min(10, comfort_score))
 
-    def calculate_practicality_score(self, outdoor_temp: float, indoor_temp: float,
-                                     question_type: str = "simple") -> float:
+    def calculate_practicality_score(self, outdoor_temp: float, indoor_temp: float,) -> float:
         """
         Calculate practicality as likelihood of sustained behavioral adoption.
         NOT about comfort (that's the comfort criterion), but about behavioral abandonment.
@@ -211,11 +206,6 @@ class HVACGroundTruthCalculator:
           Energy Research & Social Science 32:13-22
           Finding: Override behavior increases with extreme setpoints regardless of comfort
 
-        - Stopps & Touchie (2021). "Residential smart thermostat use: An exploration of
-          thermostat programming, environmental attitudes, and the influence of smart controls"
-          Energy and Buildings 238:110834
-          Finding: Complex schedules have 40-45% adoption rate vs 90%+ for simple setpoints
-
         - Karjalainen (2007). "Gender differences in thermal comfort and use of thermostats"
           Indoor Air 17(1):60-67
           Finding: Habituation difficulty for non-standard temperatures drives abandonment
@@ -223,29 +213,29 @@ class HVACGroundTruthCalculator:
 
         if outdoor_temp > 75:  # Cooling mode
             if indoor_temp >= 82:
-                # INCREASED: 1.0 → 1.5 per degree above 82°F
+                # INCREASED: 1.0 to 1.5 per degree above 82°F
                 extremity_penalty = (indoor_temp - 82) * 1.5
             elif indoor_temp <= 71:
-                # INCREASED: 0.6 → 1.0 per degree below 71°F
+                # INCREASED: 0.6 to 1.0 per degree below 71°F
                 extremity_penalty = (71 - indoor_temp) * 1.0
             else:
                 extremity_penalty = 0
         else:  # Heating mode
             if indoor_temp <= 63:
-                # INCREASED: 1.0 → 1.8 per degree below 63°F
+                # INCREASED: 1.0 to 1.8 per degree below 63°F
                 extremity_penalty = (63 - indoor_temp) * 1.8
             elif indoor_temp >= 76:
-                # INCREASED: 0.5 → 0.8 per degree above 76°F
+                # INCREASED: 0.5 to 0.8 per degree above 76°F
                 extremity_penalty = (indoor_temp - 76) * 0.8
             else:
                 extremity_penalty = 0
 
         base_score = 10 - extremity_penalty
 
-        # LOWER FLOOR: 1.5 → 0.5 to allow more penalty
+        # LOWER FLOOR: 1.5 to  0.5 to allow more penalty
         base_score = max(0.5, base_score)
 
-        # Component 2: ΔT operational feasibility
+        # Component 2: change in T operational feasibility
         # Large ΔT indicates system operating at limits; lower reliability/higher failure risk
         delta_t = abs(outdoor_temp - indoor_temp)
         if delta_t < 10:
@@ -278,20 +268,12 @@ class HVACGroundTruthCalculator:
         """
         Calculate budget constraint penalty multiplier for energy cost score.
 
-        Soft exponential penalty prevents infeasible recommendations while preserving
-        MAVT framework.
+        - <80%  : No penalty. Thaler, R. (1999). J. Behavioral Decision Making, 12, 183-206.
+    - 80-100%: Linear decline. Heath, C., & Soll, J. B. (1996). J. Consumer Research, 23(1), 40-52.
+    - 100-150%: Exponential decline. Prelec & Loewenstein (1998). Marketing Science, 17(1), 4-28.
+            Energy-specific: Heutel, G. (2017). NBER WP 23692.
+    - >150%  : Eliminated. Gathergood, J. (2012). J. Economic Psychology, 33(3), 590-602.
 
-        Penalty Structure:
-        - <80% budget: No penalty (multiplier = 1.0)
-        - 80-100% budget: Linear decline (approaching limit)
-        - 100-150% budget: Exponential decline (budget violation)
-        - >150% budget: Complete elimination (multiplier = 0.0, infeasible)
-
-        Example: $175 budget
-        - $140 cost (80%): multiplier = 1.0
-        - $175 cost (100%): multiplier = 0.5
-        - $230 cost (131%): multiplier ≈ 0.15
-        - $267 cost (153%): multiplier = 0.0 (eliminated)
 
         Args:
             monthly_cost: Estimated monthly energy cost for this alternative
@@ -306,24 +288,20 @@ class HVACGroundTruthCalculator:
         utilization = monthly_cost / monthly_budget
 
         if utilization < 0.80:
-            # Below 80%: Comfortable headroom, no penalty
+            # if utilization < 0.80:    # Safety margin. Thaler 1999.
             return 1.0
 
         elif utilization < 1.0:
-            # 80-100%: Linear decline
-            # At 80%: penalty = 1.0
-            # At 100%: penalty = 0.5
+            # Linear decline. Heath & Soll 1996.
             return 1.0 - 2.5 * (utilization - 0.80)
 
         elif utilization < 1.5:
-            # 100-150%: Exponential decline
-            # At 100%: penalty = 0.5
-            # At 150%: penalty ≈ 0.01
+            # Exponential loss aversion. Prelec & Loewenstein 1998; Heutel 2017.
             import math
             return 0.5 * math.exp(-3.0 * (utilization - 1.0))
 
         else:
-            # >150%: Complete elimination
+            #Eliminated. Gathergood 2012.
             return 0.0
 
     def apply_value_function(self, raw_value: float, vf_spec: str, value_type: str) -> float:
@@ -336,43 +314,27 @@ class HVACGroundTruthCalculator:
         - Cetin & Novoselac (2015): Runtime patterns
         - Alves et al. (2016): Degradation multipliers
         - Krarti & Howarth (2020): SEER-power relationships
-        - EPA eGRID (2023): Grid emissions factors
+        - EPA eGRID (2025): Grid emissions factors
         """
         reference_ranges = {
                 'energy_cost': {
         # 5th-95th percentile from actual dataset distribution
         # Captures 90% of realistic alternatives, creates sensitivity in cluster region
 
-        # Min calculation:
-        # Huyen & Cetin (2019): "Daily consumption of 6-8.2 kWh for well-insulated
-        # homes with SEER 16+ under moderate conditions" (Energies 12(1):188)
-        # → 8hr baseline: 2.0 kWh × $0.14/kWh = $0.28
+                    # Min (efficient): Huyen & Cetin (2019), Energies 12(1):188;
+                    #   Kim et al. (2024), Building Simulation; Cetin & Novoselac (2015), EB 96:210.
 
-        # Kim et al. (2024): "Each 1°F increase in cooling setpoint reduces consumption
-        # by 8-12%" (Building Simulation, DOI: 10.1007/s12273-024-1203-9)
-        # → 82°F setpoint (6°F above 76°F): 48% reduction → $0.28 × 0.52 = $0.15
+                    'min': 0.47,
 
-        # Cetin & Novoselac (2015): "HVAC runtime shows significant variation based on
-        # setpoint strategy and occupancy patterns" (Energy and Buildings 96:210-220)
-        # → Accounting for partial operation: $0.47 (5th percentile from dataset)
-        'min': 0.47,
 
-        # Max calculation:
-        # Alves et al. (2016): "Degraded systems (SEER 8-10) consume 2.5-4× more energy
-        # than high-efficiency systems under identical loads" (Energy and Buildings 130:408-419)
-        #
-        # Krarti & Howarth (2020): "Low-efficiency systems (SEER 8-10) consume 3.8-4.5 kW
-        # under design conditions" (J. Building Engineering 31:101457)
-        # → 95th percentile from dataset: $3.31
+        # Max (degraded): Alves et al. (2016), EB 130:408; Krarti & Howarth (2020), JBE 31:101457.
+
         'max': 3.31,
         'decreasing': True
     },
     'environmental': {
-        # Calculated from energy cost bounds using PA grid emissions factor
-        #
-        # EPA eGRID (2023): "Pennsylvania state-level CO₂ emission rate of 645.8 lbs
-        # CO₂/MWh, or equivalently 0.6458 lbs CO₂/kWh" (eGRID2023 Summary Tables)
-        #
+        # Derived from energy bounds x PA emissions factor.
+        # # Source: EPA eGRID2023 Detailed Data (EPA, 2025).
         # Formula: (cost / electricity_rate) × emissions_factor
         # Min: (0.47 / 0.19) × 0.6458 = 2.474 × 0.6458 = 1.60 lbs CO₂
         # Max: (3.31 / 0.19) × 0.6458 = 17.421 × 0.6458 = 11.25 lbs CO₂
@@ -609,8 +571,8 @@ class HVACGroundTruthCalculator:
 
                 print(f"  Budget check: ${monthly_cost:.2f}/month vs ${scenario['utility_budget']:.2f} budget")
                 print(
-                    f"  Utilization: {monthly_cost / scenario['utility_budget'] * 100:.1f}% → penalty: {budget_penalty:.3f}")
-                print(f"  Energy score: {energy_vf:.2f} → {energy_vf_penalized:.2f} (after penalty)")
+                    f"  Utilization: {monthly_cost / scenario['utility_budget'] * 100:.1f}% to penalty: {budget_penalty:.3f}")
+                print(f"  Energy score: {energy_vf:.2f} to {energy_vf_penalized:.2f} (after penalty)")
 
                 energy_vf = energy_vf_penalized
 
@@ -624,7 +586,7 @@ class HVACGroundTruthCalculator:
                 'raw_emissions': round(raw['emissions_lbs'], 2)
             }
 
-            print(f"  → FINAL SCORES:")
+            print(f"  to FINAL SCORES:")
             print(
                 f"     Energy: {energy_vf:.2f}, Environmental: {env_vf:.2f}, Comfort: {comfort_vf:.2f}, Practicality: {practicality_vf:.2f}\n")
 
@@ -642,8 +604,7 @@ def process_hvac_scenarios(csv_filename: str = "HVACScenarios.csv",  output_file
     Expected CSV columns:
         Question, Location, Square Footage, Insulation, Household Size,
         Utility Budget, Housing Type, Outdoor Temp, House Age, R-Value,
-        HVAC Age, SEER, Alternative 1, Alternative 2, Alternative 3,
-        iscomplex
+        HVAC Age, SEER, Alternative 1, Alternative 2, Alternative 3
     """
 
     df = pd.read_csv(csv_filename)

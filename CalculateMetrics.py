@@ -6,16 +6,6 @@ Science Fair Project: LLM-assisted MCDA for Household Emissions Optimization
 Compares Pure Prompting, RAG-Enhanced, and Hybrid architectures against
 physics-based ground truth using MAVT scoring across HVAC, Appliance,
 and Shower decision scenarios.
-
-Key data quirks handled:
-  - GT files have overlapping scenario_ids (each file starts at 0)
-  - GT HVAC uses 'question', GT Appliance/Shower use 'description'
-  - GT score columns: energy_cost_score, environmental_score, etc.
-  - Arch score columns: energy_cost, environmental, etc.
-  - Appliance alternatives differ in format: GT='2:00 PM', Arch='Run dishwasher at 2:00 PM'
-  - Shower alternatives are numeric (duration in minutes)
-  - HVAC alternatives are numeric (temperature in F)
-  - Matching done by question text + location, then by normalized alternatives
 """
 
 import pandas as pd
@@ -27,10 +17,6 @@ import sys
 from collections import defaultdict
 
 warnings.filterwarnings("ignore")
-
-# ============================================================================
-# CONFIGURATION
-# ============================================================================
 CONFIG = {
     "ground_truth": {
         "HVAC": "ground_truth_hvac.csv",
@@ -66,10 +52,6 @@ CONFIG = {
 CRITERIA = ["energy_cost", "environmental", "comfort", "practicality"]
 
 
-# ============================================================================
-# ALTERNATIVE NORMALIZATION
-# ============================================================================
-
 def extract_time_from_alt(alt_str):
     """Extract time pattern from alternative string.
     Handles: '2:00 PM', 'Run dishwasher at 2:00 PM', '4PM', '1AM'."""
@@ -78,15 +60,13 @@ def extract_time_from_alt(alt_str):
     match = re.search(r'(\d{1,2}:\d{2}\s*[AaPp][Mm])', alt_str)
     if match:
         return match.group(1).strip().upper()
-    # Try abbreviated: '4PM', '1AM', '10PM'
+    # Try abbreviated: '4PM', '1AM'\
     match = re.search(r'(\d{1,2})\s*([AaPp][Mm])', alt_str)
     if match:
         hour = match.group(1)
         ampm = match.group(2).upper()
         return f"{hour}:00 {ampm}"
     return alt_str.strip().upper()
-
-
 def normalize_alternative(alt, decision_type):
     """Normalize alternative values for cross-file matching."""
     alt = str(alt).strip()
@@ -98,10 +78,6 @@ def normalize_alternative(alt, decision_type):
         except ValueError:
             return alt
 
-
-# ============================================================================
-# DATA LOADING
-# ============================================================================
 
 def load_ground_truth(config):
     """Load GT files separately by decision type (IDs overlap across types)."""
@@ -133,7 +109,6 @@ def load_ground_truth(config):
 
     return gt_by_type
 
-
 def load_architecture(filepath, arch_name):
     """Load an architecture results file."""
     df = pd.read_csv(filepath)
@@ -155,14 +130,8 @@ def load_architecture(filepath, arch_name):
         df = df.rename(columns={"weighted_score": "arch_weighted_score"})
 
     return df
-
-
-# ============================================================================
-# SCENARIO MATCHING
-# ============================================================================
-
 def build_gt_lookup(gt_by_type):
-    """Build lookup: (question, location) -> list of GT scenario entries."""
+    """Build lookup: (question, location):   list of GT scenario entries."""
     gt_lookup = defaultdict(list)
 
     for dtype, gt_df in gt_by_type.items():
@@ -210,7 +179,7 @@ def match_scenarios(gt_lookup, arch_df, arch_name):
             norm_alt = normalize_alternative(row["alternative"], arch_dtype)
             arch_norm_alts[norm_alt] = row
 
-        # Find best GT entry: must match decision type, maximize alt overlap
+        # Find best GT entry: must match decision type
         best_match = None
         best_overlap = -1
         for gt_entry in gt_lookup[key]:
@@ -303,10 +272,6 @@ def match_scenarios(gt_lookup, arch_df, arch_name):
     return merged_df
 
 
-# ============================================================================
-# METRIC CALCULATIONS
-# ============================================================================
-
 def compute_criterion_metrics(merged_df):
     """Compute MAE and RMSE for each criterion and overall."""
     results = {}
@@ -359,13 +324,12 @@ def compute_ranking_metrics(merged_df):
         else:
             rhos.append(1.0 if np.array_equal(gt_r, ar_r) else 0.0)
 
-        # Top-1
+        # top-1
         gt_top1 = sc.loc[sc["gt_rank"].astype(float).idxmin(), "norm_alternative"]
         ar_top1 = sc.loc[sc["arch_rank"].astype(float).idxmin(), "norm_alternative"]
         if gt_top1 == ar_top1:
             top1_ok += 1
-
-        # Top-2
+        # top-2
         ar_top2 = set(sc.sort_values("arch_rank").head(2)["norm_alternative"])
         if gt_top1 in ar_top2:
             top2_ok += 1
@@ -405,11 +369,6 @@ def compute_failure_rate(arch_df):
         "n_total_arch_scenarios": n_total,
     }
 
-
-# ============================================================================
-# MAIN EVALUATION
-# ============================================================================
-
 def evaluate_all(config):
     print("=" * 72)
     print("  MCDA ARCHITECTURE EVALUATION — METRICS REPORT")
@@ -437,24 +396,21 @@ def evaluate_all(config):
     for name, adf in arch_dfs.items():
         merged_dfs[name] = match_scenarios(gt_lookup, adf, name)
 
-    # 3. Compute and report
-    print(f"\n{'=' * 72}")
     print("  RESULTS")
-    print(f"{'=' * 72}")
+
 
     all_metrics = []
 
     for arch_name in ["Pure", "RAG", "Hybrid"]:
         merged = merged_dfs[arch_name]
         if len(merged) == 0:
-            print(f"\n*** {arch_name}: No matched data ***")
+            print(f"\n{arch_name}: No matched data")
             continue
 
-        print(f"\n{'─' * 72}")
-        print(f"  {arch_name.upper()}")
-        print(f"{'─' * 72}")
 
-        # Failure rate (Hybrid only)
+        print(f"  {arch_name.upper()}")
+
+        # Failure rate (Hybrid only; other two did not have previous failures)
         if arch_name == "Hybrid":
             fail = compute_failure_rate(arch_dfs[arch_name])
             if fail:
@@ -472,7 +428,6 @@ def evaluate_all(config):
                         "metric": k, "value": v,
                     })
 
-        # ---- Overall metrics ----
         crit = compute_criterion_metrics(merged)
         rank = compute_ranking_metrics(merged)
         n_eval = rank["n_scenarios_evaluated"]
@@ -501,7 +456,7 @@ def evaluate_all(config):
                 "metric": k, "value": v,
             })
 
-        # ---- Per decision type ----
+        # per decision type
         for dtype in ["HVAC", "Appliance", "Shower"]:
             dt_data = merged[merged["decision_type"] == dtype]
             if len(dt_data) == 0:
@@ -537,10 +492,7 @@ def evaluate_all(config):
                     "metric": k, "value": v,
                 })
 
-    # ---- 4. Comparative summary ----
-    print(f"\n{'=' * 72}")
-    print("  COMPARATIVE SUMMARY")
-    print(f"{'=' * 72}")
+
 
     def _get(arch, dtype, metric):
         """Helper to pull a metric value from all_metrics list."""
@@ -599,19 +551,12 @@ def evaluate_all(config):
         for a in archs:
             row += _fmt(_get(a, dtype, "top1_accuracy"))
         print(row)
-
-    # ---- 5. Save CSV ----
     metrics_df = pd.DataFrame(all_metrics)
     metrics_df.to_csv(config["output_csv"], index=False)
     print(f"\n\nMetrics saved to: {config['output_csv']}")
     print(f"Total metric rows: {len(metrics_df)}")
 
     return metrics_df, merged_dfs
-
-
-# ============================================================================
-# ENTRY POINT
-# ============================================================================
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help"):

@@ -5,7 +5,6 @@ from sentence_transformers import SentenceTransformer
 import os
 from pathlib import Path
 
-# ========== CONFIGURATION ==========
 RAG_FILES = {
     'HVAC': {
 
@@ -32,7 +31,7 @@ def load_hvac_data(csv_dir: str) -> pd.DataFrame:
     gt_path = os.path.join(csv_dir, RAG_FILES['HVAC']['ground_truth'])
     df = pd.read_csv(gt_path)
 
-    # Rename columns to match format_scenario_text expectations
+    # Rename columns to match   format_scenario_text expectations
     df['Question'] = df['question']
     df['Location'] = df['location']
     df['Square Footage'] = df['square_footage']
@@ -50,7 +49,7 @@ def load_appliance_data(csv_dir: str) -> pd.DataFrame:
     gt_path = os.path.join(csv_dir, RAG_FILES['Appliance']['ground_truth'])
     df = pd.read_csv(gt_path)
 
-    # Rename columns to match expected format
+    #rename columns to match expected format
     df['Question'] = df['description']
     df['Location'] = df['location']
     df['Household Size'] = df['occupants']
@@ -64,7 +63,7 @@ def load_shower_data(csv_dir: str) -> pd.DataFrame:
     scenarios_path = os.path.join(csv_dir, RAG_FILES['Shower']['scenarios'])
     df = pd.read_csv(scenarios_path)
 
-    # Rename columns to match expected format
+    #rename columns to match expected format
     df['Question'] = df['description']
     df['Location'] = df['location']
     df['Household Size'] = df['occupants']
@@ -76,11 +75,9 @@ def format_scenario_text(row: pd.Series, decision_type: str) -> str:
     """
     Convert scenario to natural language text for embedding.
     Decision-type-specific formatting.
-
     Args:
         row: Pandas Series with scenario fields
-        decision_type: 'HVAC', 'Appliance', or 'Shower'
-
+        decision_type: 'HVAC', 'Appliance', or 'Shower'\
     Returns:
         Formatted text string
     """
@@ -119,24 +116,20 @@ def format_scenario_text(row: pd.Series, decision_type: str) -> str:
 def build_rag_database(csv_dir=r'C:\Users\ishaa\PycharmProjects\LLM-MCDA'):
     """
     Build ChromaDB vector database from RAG scenario CSV files.
-
     Process:
     1. Load all scenario files (with appropriate merging)
     2. Convert each scenario to text using decision-type-specific formatting
     3. Generate embeddings using sentence-transformers
     4. Store in ChromaDB with metadata (decision type, ground truth scores)
-
     Args:
         csv_dir: Directory containing the CSV files
     """
-    print("=" * 70)
     print("BUILDING RAG DATABASE")
-    print("=" * 70)
 
     # Initialize embedding model
-    print(f"\nLoading embedding model: {EMBEDDING_MODEL}")
+    print(f"\nLoading embedding mo del: {EMBEDDING_MODEL}")
     embedding_model = SentenceTransformer(EMBEDDING_MODEL)
-    print(f"✓ Model loaded (embedding dim: {embedding_model.get_sentence_embedding_dimension()})")
+    print(f"Model loaded (embedding dim: {embedding_model.get_sentence_embedding_dimension()})")
 
     # Initialize ChromaDB
     print(f"\nInitializing ChromaDB at: {CHROMA_DB_PATH}")
@@ -145,7 +138,7 @@ def build_rag_database(csv_dir=r'C:\Users\ishaa\PycharmProjects\LLM-MCDA'):
     # Delete existing collection if it exists (fresh build)
     try:
         client.delete_collection(COLLECTION_NAME)
-        print(f"✓ Deleted existing collection: {COLLECTION_NAME}")
+        print(f"Deleted existing collection: {COLLECTION_NAME}")
     except:
         pass
 
@@ -154,18 +147,18 @@ def build_rag_database(csv_dir=r'C:\Users\ishaa\PycharmProjects\LLM-MCDA'):
         name=COLLECTION_NAME,
         metadata={"description": "MCDA scenarios with ground truth scores"}
     )
-    print(f"✓ Created collection: {COLLECTION_NAME}")
+    print(f"Created collection: {COLLECTION_NAME}")
 
     # Process each decision type
     total_scenarios = 0
 
     # HVAC
-    print(f"\n{'=' * 70}")
+    
     print(f"Processing HVAC scenarios")
-    print(f"{'=' * 70}")
+    
     try:
         hvac_df = load_hvac_data(csv_dir)
-        print(f"✓ Loaded {len(hvac_df)} HVAC scenario-alternative combinations")
+        print(f"Loaded {len(hvac_df)} HVAC scenario-alternative combinations")
 
         # Group by scenario_id to get unique scenarios
         for scenario_id, group in hvac_df.groupby('scenario_id'):
@@ -186,7 +179,7 @@ def build_rag_database(csv_dir=r'C:\Users\ishaa\PycharmProjects\LLM-MCDA'):
             # Generate embedding
             embedding = embedding_model.encode(scenario_text).tolist()
 
-            # Prepare metadata
+            #prepare data
             metadata = {
                 'decision_type': 'HVAC',
                 'scenario_id': f'hvac_{scenario_id}',
@@ -204,26 +197,26 @@ def build_rag_database(csv_dir=r'C:\Users\ishaa\PycharmProjects\LLM-MCDA'):
             )
 
         unique_scenarios = len(hvac_df['scenario_id'].unique())
-        print(f"✓ Added {unique_scenarios} HVAC scenarios to database")
+        print(f"Added {unique_scenarios} HVAC scenarios to database")
         total_scenarios += unique_scenarios
 
     except Exception as e:
-        print(f"⚠ WARNING: Error processing HVAC scenarios: {e}")
+        print(f" Error processing HVAC scenarios: {e}")
 
     # Appliance
-    print(f"\n{'=' * 70}")
+    
     print(f"Processing Appliance scenarios")
-    print(f"{'=' * 70}")
+
     try:
         appliance_df = load_appliance_data(csv_dir)
-        print(f"✓ Loaded {len(appliance_df)} Appliance scenario-alternative combinations")
+        print(f"Loaded {len(appliance_df)} Appliance scenario-alternative combinations")
 
         # Group by scenario_id
         for scenario_id, group in appliance_df.groupby('scenario_id'):
             first_row = group.iloc[0]
             scenario_text = format_scenario_text(first_row, 'Appliance')
 
-            # Get all alternatives (should be 3)
+            # Get all alternatives
             alts_data = {}
             for idx, (_, row) in enumerate(group.iterrows(), 1):
                 alts_data[f'alt{idx}'] = row['alternative']
@@ -250,26 +243,24 @@ def build_rag_database(csv_dir=r'C:\Users\ishaa\PycharmProjects\LLM-MCDA'):
             )
 
         unique_scenarios = len(appliance_df['scenario_id'].unique())
-        print(f"✓ Added {unique_scenarios} Appliance scenarios to database")
+        print(f"Added {unique_scenarios} Appliance scenarios to database")
         total_scenarios += unique_scenarios
 
     except Exception as e:
-        print(f"⚠ WARNING: Error processing Appliance scenarios: {e}")
+        print(f" Error processing Appliance scenarios: {e}")
 
     # Shower
-    print(f"\n{'=' * 70}")
+    
     print(f"Processing Shower scenarios")
-    print(f"{'=' * 70}")
+    
     try:
         shower_df = load_shower_data(csv_dir)
-        print(f"✓ Loaded {len(shower_df)} Shower scenario-alternative combinations")
-
-        # Group by scenario_id
+        print(f"Loaded {len(shower_df)} Shower scenario-alternative combinations")
         for scenario_id, group in shower_df.groupby('scenario_id'):
             first_row = group.iloc[0]
             scenario_text = format_scenario_text(first_row, 'Shower')
 
-            # Get all alternatives (should be 3)
+            # Get all alternatives
             alts_data = {}
             for idx, (_, row) in enumerate(group.iterrows(), 1):
                 alts_data[f'alt{idx}'] = f"{row['duration_min']} min"
@@ -296,23 +287,21 @@ def build_rag_database(csv_dir=r'C:\Users\ishaa\PycharmProjects\LLM-MCDA'):
             )
 
         unique_scenarios = len(shower_df['scenario_id'].unique())
-        print(f"✓ Added {unique_scenarios} Shower scenarios to database")
+        print(f"added {unique_scenarios} Shower scenarios to database")
         total_scenarios += unique_scenarios
 
     except Exception as e:
-        print(f"⚠ WARNING: Error processing Shower scenarios: {e}")
+        print(f" Error processing Shower scenarios: {e}")
 
     # Summary
-    print(f"\n{'=' * 70}")
+    
     print(f"DATABASE BUILD COMPLETE")
-    print(f"{'=' * 70}")
     print(f"Total scenarios: {total_scenarios}")
     print(f"Database location: {CHROMA_DB_PATH}")
     print(f"Collection name: {COLLECTION_NAME}")
     print(f"\nTo use in rag_enhanced.py:")
     print(f"  client = chromadb.PersistentClient(path='{CHROMA_DB_PATH}')")
     print(f"  collection = client.get_collection('{COLLECTION_NAME}')")
-    print(f"{'=' * 70}\n")
 
 
 def test_retrieval(test_scenario_text: str, decision_type: str, k: int = 3):
@@ -324,9 +313,8 @@ def test_retrieval(test_scenario_text: str, decision_type: str, k: int = 3):
         decision_type: 'HVAC', 'Appliance', or 'Shower'
         k: Number of similar scenarios to retrieve
     """
-    print(f"\n{'=' * 70}")
+    
     print(f"TESTING RETRIEVAL")
-    print(f"{'=' * 70}")
     print(f"Query: {test_scenario_text}")
     print(f"Decision type filter: {decision_type}")
     print(f"Retrieving top-{k} similar scenarios...\n")
@@ -365,9 +353,8 @@ def test_retrieval(test_scenario_text: str, decision_type: str, k: int = 3):
                   f"Pract: {metadata.get('alt1_practicality', 0):.2f}")
             print()
     else:
-        print("⚠ No results found!")
+        print("No results foun")
 
-    print(f"{'=' * 70}\n")
 
 if __name__ == "__main__":
     # Build database

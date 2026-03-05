@@ -4,47 +4,21 @@ import logging
 import numpy as np
 from typing import Dict, List, Tuple
 class ApplianceGroundTruthCalculator:
-    """
-    Calculate physics-based ground truth scores for appliance scheduling decisions.
-
-    Key difference from HVAC: Energy consumption is constant per cycle,
-    but cost varies by time-of-day due to TOU pricing.
-
-    Citations:
-    - Paetz et al. (2012): "Test-residents said to be able to postpone the dish-washer
-      use by twelve hours without constraints in their daily routines"
-      ACEEE Summer Study, Paper 0193-000232
-    - EPA eGRID (2023): Pennsylvania grid emissions factor 0.6458 lbs CO2/kWh
-    - PPL Electric (2024): TOU rate structure for southeastern PA
-    - PECO Energy (2021): TOU rate structure for Philadelphia area
-    """
-    # EPA eGRID2022: Pennsylvania grid emissions 0.85 lb CO2/kWh
-    # Citations: EPA eGRID2022 [Ref 77,81], PA DEP 2021 [Ref 29,32]
+    # PA CO2 intensity from EPA eGRID2023 Detailed Data (EPA, 2025)
     EMISSIONS_FACTOR_PA = 0.6458  # lbs CO2/kWh
 
-    # ADD AFTER (new constant):
-    # EIA 2024-2025: Pennsylvania residential average
-    # Citations: EIA state data [Ref 29], PA suppliers [Ref 28]
-    ELECTRICITY_RATE_PA = 0.19  # $/kWh (informational, scenarios provide own rates)
+    # PA residential electricity price from EIA FAQ (EIA, 2022).
+    ELECTRICITY_RATE_PA = 0.19  # dollars per/kWh
+    # Peak window 2 PM-6 PM from PECO Energy TOU documentation (PECO, 2021).
+    PEAK_HOURS = (14, 18)
 
-    # Fixed Peak Hours (2pm-6pm) - no seasonal variation
-    # Based on PECO Energy standard TOU schedule
-    PEAK_HOURS = (14, 18)  # 2 PM - 6 PM
-
-    # Dishwasher: Modern 38-50 dBA, typical 44-48 dBA [Ref 35,36]
-    # Washer: 50-70 dBA average wash+spin [Ref 37,38]
-    # Dryer: 50-65 dBA during operation [Ref 39]
-    # Citations: Manufacturer specs [Ref 35,36], acoustic studies [Ref 40,38]
     APPLIANCE_NOISE_LEVELS = {
         'dishwasher': 45,
         'washer': 50,
         'dryer': 55
     }
 
-    # Apartment Noise Standards
-    # All County Apartments: "Anything louder than 45 dB during daytime or 35 dB
-    # in evening is deemed too loud"
-    # Decibel Pro: "Time limits usually apply after 10 pm and until 7 am"
+
     NOISE_LIMIT_DAYTIME = 45     # dBA acceptable during day
     NOISE_LIMIT_EVENING = 35     # dBA acceptable after 10pm
     # Linear VF for energy cost - equal marginal utility across range
@@ -56,12 +30,10 @@ class ApplianceGroundTruthCalculator:
     # Kotchen & Moore (2007): "When environmental impacts are framed in absolute physical
     # units (tons CO₂, lbs emissions), people exhibit approximately linear preferences"
     # (J. Environmental Economics and Management 54(1):100-123)
+    # Log/exponential value function and alpha parameters inspired by Thaler 1999; Heath & Soll 1996; Prelec & Loewenstein 1998.
     VF_ENVIRONMENTAL = "linear"
-
-    # test if needs adjustment
     VF_COMFORT = "logarithmic, a=1.5"
     VF_PRACTICALITY = "logarithmic, a=1.2"
-
     def determine_rate_period(self, run_time_hour: int) -> str:
         """
         Determine if run time falls in peak or off-peak period.
@@ -72,7 +44,6 @@ class ApplianceGroundTruthCalculator:
         Returns:
             "peak" or "offpeak"
 
-        Citation: PECO Energy TOU schedule - 2pm-6pm peak hours
         """
         peak_start, peak_end = self.PEAK_HOURS
 
@@ -86,23 +57,23 @@ class ApplianceGroundTruthCalculator:
         """
         Calculate energy cost based on TOU rate structure.
 
-        CRITICAL: Energy consumption (kWh) is FIXED - only COST varies by time.
-
-        Args:
-            kwh_cycle: Fixed energy per cycle (from Ground Truth Data.pdf Section 2)
+        args:
+            kwh_cycle: Fixed energy per cycle
             run_time_hour: When appliance runs (0-23)
             peak_rate: Peak period $/kWh
             offpeak_rate: Off-peak period $/kWh
 
         Returns:
             Energy cost in dollars
+       Dryer (heat pump 0.8-1.5 kWh; standard electric 2.5-4.0 kWh):
+       Winfield, D., et al. (2016). Measured Performance of Heat Pump Clothes Dryers.
+        ACEEE Summer Study on Energy Efficiency in Buildings.
+        Northeast Energy Efficiency Partnerships (NEEP). (2015).
+        New Study Unearths Energy Baseline for Clothes Dryers in the Northeast.
+        Dishwasher (0.9-1.1 kWh Energy Star): Porras, G., et al. (2020). ERC, 2.
+        Washer (0.15-0.25 kWh HE): Chen-Yu, J., & Emmel, J. (2018). Fashion & Textiles, 5.
+        Hustvedt, G., Ahn, M., & Emmel, J. (2013). Int. J. Consumer Studies, 37.
 
-        Citations:
-        - Ground Truth Data.pdf Section 2:
-          Dishwasher 0.9-1.1 kWh/cycle (Energy Star), 1.4-2.0 kWh (old)
-          Washer 0.15-0.25 kWh (front-load HE), 0.3-0.5 kWh (top-load)
-          Dryer 0.8-1.5 kWh (heat pump), 2.5-4.0 kWh (standard electric)
-        - Porras et al. (2020), Chen-Yu & Emmel (2018), Patel et al. (2021)
         """
         period = self.determine_rate_period(run_time_hour)
 
@@ -112,16 +83,14 @@ class ApplianceGroundTruthCalculator:
             rate = offpeak_rate
 
         cost = kwh_cycle * rate
-        print(f"  → Energy cost: {kwh_cycle} kWh × ${rate:.4f}/kWh ({period}) = ${cost:.4f}")
+        print(f" Energy cost: {kwh_cycle} kWh × ${rate:.4f}/kWh ({period}) = ${cost:.4f}")
         return cost
 
     def calculate_environmental_impact(self, kwh_cycle: float) -> float:
         """
         Calculate CO2 emissions from electricity consumption.
 
-        IMPORTANT: Environmental impact is SAME regardless of run time
-        (using average grid emissions, not marginal hourly emissions).
-
+       
         Args:
             kwh_cycle: Energy consumption per cycle
 
@@ -132,7 +101,7 @@ class ApplianceGroundTruthCalculator:
         0.6458 lbs CO2/kWh (state-level average)
         """
         emissions = kwh_cycle * self.EMISSIONS_FACTOR_PA
-        print(f"  → Emissions: {kwh_cycle} kWh × {self.EMISSIONS_FACTOR_PA} lbs/kWh = {emissions:.3f} lbs CO2")
+        print(f"  : Emissions: {kwh_cycle} kWh × {self.EMISSIONS_FACTOR_PA} lbs/kWh = {emissions:.3f} lbs CO2")
         return emissions
 
     def calculate_comfort_score(self, delay_hours: float, run_time_hour: int,
@@ -146,17 +115,10 @@ class ApplianceGroundTruthCalculator:
         2. Noise disruption (late night in apartment = worse)
         3. Household size multiplier (more people = dishes/laundry pile up faster)
 
-        Citations:
-        - Paetz et al. (2012): "Test-residents said to be able to postpone the
-          dish-washer use by twelve hours without constraints in their daily routines"
-          ACEEE Summer Study, Paper 0193-000232
-
-        - All County Apartments: "Anything louder than 45 dB during daytime or
-          35 dB in evening is deemed too loud"
-
-        - Whirlpool (2024): Modern dishwashers 40-50 dBA typical
-          https://www.whirlpool.com/blog/kitchen/what-decibel-is-a-quiet-dishwasher.html
-        """
+        Source: Paetz, A., Dutschke, E., & Fichtner, W. (2012). Shifting dish-washer use.
+        ACEEE Summer Study on Energy Efficiency in Buildings, Paper 0193-000232.
+        12-hour delay is the max acceptable without lifestyle disruption.
+ """
 
         # Component 1: Base delay penalty
         # Paetz et al.: 12hr delay is maximum acceptable for dishwasher
@@ -171,7 +133,7 @@ class ApplianceGroundTruthCalculator:
         else:
             base_comfort = 2.0   # Beyond acceptable (>12hr)
 
-        print(f"  → Base comfort (delay={delay_hours}hr): {base_comfort}/10")
+        print(f"  : Base comfort (delay={delay_hours}hr): {base_comfort}/10")
 
         # Component 2: Noise disruption penalty
         # Depends on: time of day + housing type + appliance noise
@@ -186,10 +148,8 @@ class ApplianceGroundTruthCalculator:
             appliance_noise = 50
         noise_penalty = 0.0
             # Late night running (10pm-7am)
-        # Decibel Pro: "Time limits usually apply after 10 pm and until 7 am"
         if 22 <= run_time_hour or run_time_hour < 7:
-            # Noise limit is 35 dBA in evening (All County Apartments)
-            if appliance_noise > self.NOISE_LIMIT_EVENING:
+           if appliance_noise > self.NOISE_LIMIT_EVENING:
                 noise_penalty = 2.0  # Base penalty for late night
 
                 # Housing type multiplier
@@ -201,11 +161,10 @@ class ApplianceGroundTruthCalculator:
                 else:  # Single-family
                     noise_penalty *= 0.8   # Isolated, lower concern
 
-                print(f"  → Noise penalty (late night, {housing_type}): -{noise_penalty:.1f}")
+                print(f"  : Noise penalty (late night, {housing_type}): -{noise_penalty:.1f}")
 
         # Component 3: Household size impact
-        # Larger households → dishes pile up faster → delay worse
-        # Ground Truth Data Section 9: Practicality varies by household context
+        # Larger households : dishes pile up faster : delay worse
         if occupants >= 5:
             size_penalty = 1.5
         elif occupants >= 3:
@@ -216,7 +175,7 @@ class ApplianceGroundTruthCalculator:
         # Apply size penalty proportional to delay
         # (No delay = no penalty, long delay = full penalty)
         size_penalty *= (delay_hours / 12.0)  # Scale by delay fraction
-        print(f"  → Household size penalty ({occupants} occupants): -{size_penalty:.1f}")
+        print(f"  : Household size penalty ({occupants} occupants): -{size_penalty:.1f}")
 
         final_comfort = base_comfort - noise_penalty - size_penalty
         return max(0.0, min(10.0, final_comfort))
@@ -233,24 +192,15 @@ class ApplianceGroundTruthCalculator:
         - Household coordination difficulty
 
         Citations:
-        - Paetz et al. (2012): "Monetary savings became more important, which was
-          also found to be one of the main underlying motives in shifting loads...
-          During this test-living phase the residents saved around 6.5% on electricity costs"
-          ACEEE Summer Study, Paper 0193-000232
+        - Paetz, A., Dutschke, E., & Fichtner, W. (2012). ACEEE, Paper 0193-000232.
+- Indonesia TOU Adoption Study. (2024). PMC11190461.
+- Shewale, A., et al. (2023). Arabian Journal for Science and Engineering.
+- Newsham, G. R., & Bowker, B. G. (2010). Energy Policy, 38(7), 3289-3296.
+  General TOU/CPP load-shifting context.
+- Waseem, M., et al. (2020). Electric Power Systems Research, 187, 106477.
+  Optimization-based appliance scheduling context.
 
-        - Indonesia TOU study (2024): "63% of survey participants expect to opt into
-          ToU scheme... 37% find ToU burdensome to implement and very demanding"
-          PMC11190461
-
-        - Shewale et al. (2023): TOU appliance scheduling adoption <20% without automation
-          Arabian Journal for Science and Engineering, DOI: 10.1007/s13369-023-08178-w\
-
-
-        - Floor value: 4.0
-          Indonesia TOU adoption study (PMC11190461, 2024): 63% of respondents willing
-          to opt into TOU scheduling; a 4/10 reflects "feasible with behavior change
-          required," consistent with majority-but-not-universal adoption at acceptable hours.
-        """
+  """
 
         # Component 1: Base adoption likelihood by delay duration
         # Paetz: 12hr delay acceptable, but adoption varies
@@ -269,7 +219,7 @@ class ApplianceGroundTruthCalculator:
         else:
             base_practicality = 1.5   # Beyond typical adoption range
 
-        print(f"  → Base practicality (delay={delay_hours}hr): {base_practicality}/10")
+        print(f"  : Base practicality (delay={delay_hours}hr): {base_practicality}/10")
 
         # Component 2: Timing complexity (remembering to run at specific time)
         # Late night/early morning = harder to remember/coordinate
@@ -282,7 +232,7 @@ class ApplianceGroundTruthCalculator:
         elif 22 <= run_time_hour < 24:  # Late night (10pm-midnight)
             timing_penalty = 1.0   # Somewhat inconvenient
 
-        print(f"  → Timing complexity penalty: -{timing_penalty:.1f}")
+        print(f"  : Timing complexity penalty: -{timing_penalty:.1f}")
 
         # Component 3: Household coordination difficulty
         # More occupants = harder to coordinate "don't run dishes yet"
@@ -297,7 +247,7 @@ class ApplianceGroundTruthCalculator:
 
         # Scale penalty by delay (longer delay = more coordination needed)
         coordination_penalty *= (delay_hours / 12.0)
-        print(f"  → Coordination penalty ({occupants} occupants): -{coordination_penalty:.1f}")
+        print(f"  : Coordination penalty ({occupants} occupants): -{coordination_penalty:.1f}")
 
         final_practicality = base_practicality - timing_penalty - coordination_penalty
         DAYTIME_START = 7  # 7am
@@ -328,7 +278,7 @@ class ApplianceGroundTruthCalculator:
         # Extract run time from alternative (e.g., "7pm", "10pm", "2am")
         time_match = re.search(r'(\d{1,2})(?::\d{2})?\s*(am|pm)', alt, re.IGNORECASE)
         if not time_match:
-            print(f"  ⚠ Could not parse run time from: {alt}")
+            print(f"  : Could not parse run time from: {alt}")
             # Return baseline with no delay
             baseline_hour = self._parse_time_to_hour(scenario.get('Baseline Time', '7pm'))
             return baseline_hour, 0.0
@@ -355,7 +305,7 @@ class ApplianceGroundTruthCalculator:
             # Crossed midnight
             delay_hours = float(24 - baseline_hour + run_time_hour)
 
-        print(f"  Parsed: '{alt}' → run at {run_time_hour:02d}:00, "
+        print(f"  Parsed: '{alt}' : run at {run_time_hour:02d}:00, "
               f"delay={delay_hours}hr from baseline {baseline_str}")
 
         return run_time_hour, delay_hours
@@ -364,10 +314,10 @@ class ApplianceGroundTruthCalculator:
         Helper function to convert time string to 24-hour format.
 
         Examples:
-        - "7pm" → 19
-        - "8am" → 8
-        - "12pm" → 12
-        - "12am" → 0
+        - "7pm" : 19
+        - "8am" : 8
+        - "12pm" : 12
+        - "12am" : 0
 
         Args:
             time_str: Time string (e.g., "7pm", "8am")
@@ -380,7 +330,7 @@ class ApplianceGroundTruthCalculator:
         match =re.search(r'(\d{1,2})(?::\d{2})?\s*(am|pm)', time_str, re.IGNORECASE)
         if not match:
             # Default to 7pm if unparseable
-            print(f"  ⚠ Could not parse baseline time '{time_str}', defaulting to 7pm")
+            print(f"  : Could not parse baseline time '{time_str}', defaulting to 7pm")
             return 19
 
         hour = int(match.group(1))
@@ -411,21 +361,21 @@ class ApplianceGroundTruthCalculator:
         """
         reference_ranges = {
             'energy_cost': {
-                # Q16: Appliance energy cost per cycle in PA
-                # Min: Front-load HE washer off-peak
-                #      0.1 kWh × $0.09/kWh = $0.009 (use 0.02 for 5th percentile)
-                # Max: Electric resistance dryer peak
-                #      4.5 kWh × $0.20/kWh = $0.90
-                # Citations: Q16, Q8-Q10 [Ref 29,28,33,34]
+                # Reference range derived from representative appliance usage:
+                # Min: Efficient HE washer off-peak≈0.1 kWh × $0.09/kWh ≈ $0.01 (rounded to $0.02 for 5th percentile)
+                # Max: Standard electric resistance dryer at peak≈4.5 kWh × $0.20/kWh ≈ $0.90
+                # Sources: Winfield et al. (2016); NEEP (2015); Porras et al. (2020); Chen-Yu & Emmel (2018); EIA (2022) for PA electricity price.
+
                 'min': 0.02,
                 'max': 0.90,
                 'decreasing': True
             },
             'environmental': {
-                # Derived from energy bounds × emissions factor
-                # Min: 0.1 kWh × 0.85 = 0.085 lbs CO2 (round to 0.09)
-                # Max: 4.5 kWh × 0.85 = 3.83 lbs CO2
-                # Citations: EPA eGRID2022 [Ref 77,29], Q8-Q10 [Ref 33,34]
+                # Derived from energy bounds × PA emissions factor:
+                # Min: 0.1 kWh × 0.6458 lbs/kWh ≈ 0.065 lbs CO2 (adjusted to data set; none of my alternatives aligned with the 5th percintile or lower, so adjusted up)
+                # Max: 4.5 kWh × 0.6458 lbs/kWh ≈ 2.9 lbs CO2 (adjusted to data set; more extreme alternatives included (>95th percentile) so bound adjusted up)
+                # Source: EPA eGRID2023 Detailed Data (Version 2).
+
                 'min': 0.09,
                 'max': 3.83,
                 'decreasing': True
@@ -500,47 +450,11 @@ class ApplianceGroundTruthCalculator:
 
     def calculate_budget_penalty(self, monthly_cost: float, monthly_budget: float) -> float:
         """
-        1. 80% Threshold (Comfortable Headroom):
-           - Thaler (1999): "Mental accounting creates hedonic framing of expenses
-             against budget envelopes; consumers maintain safety margins"
-             Mental Accounting Matters, J. Behavioral Decision Making 12:183-206
-
-           - Financial planning literature: 80% rule-of-thumb for sustainable spending
-             vs income/budget (20% safety margin)
-             Statman (2017), Finance for Normal People, Oxford University Press
-
-        2. 100% Threshold (Budget Limit):
-           - Prelec & Loewenstein (1998): "Pain of paying" increases sharply at
-             budget violation point; consumers exhibit loss aversion
-             The Red and the Black, Marketing Science 17(1):4-28
-
-           - Heath & Soll (1996): Mental budget violations trigger self-control costs
-             and justify abandonment of consumption goals
-             Mental Budgeting and Consumer Decisions, J. Consumer Research 23(1):40-52
-
-        3. 100-150% Range (Exponential Decline):
-           - Kahneman & Tversky (1979): Prospect theory - losses loom larger than gains;
-             value function is steeper for losses (λ ≈ 2-2.5)
-             Prospect Theory, Econometrica 47(2):263-291
-
-           - Budget overruns treated as losses; penalty accelerates nonlinearly
-           - Exponential decay models increasing psychological cost of deficit
-
-        4. 150% Cutoff (Infeasibility):
-           - Simon (1955): Bounded rationality - options exceeding feasibility
-             constraints are eliminated from consideration set
-             A Behavioral Model of Rational Choice, Quarterly J. Economics 69(1):99-118
-
-           - Financial stress research: 150% debt-to-income triggers default risk,
-             alternatives become "unaffordable" not just "expensive"
-             Gathergood (2012), Self-control, financial literacy and consumer
-             over-indebtedness, J. Economic Psychology 33(3):590-602
-
-        VALIDATION:
-        - Consistent with mental accounting theory (Thaler)
-        - Matches prospect theory loss aversion (Kahneman & Tversky)
-        - Reflects bounded rationality screening (Simon)
-        - Aligns with financial stress cutoffs (consumer finance research)
+        - <80%  : No penalty. Thaler, R. (1999). J. Behavioral Decision Making, 12, 183-206.
+    - 80-100%: Linear decline. Heath, C., & Soll, J. B. (1996). J. Consumer Research, 23(1), 40-52.
+    - 100-150%: Exponential decline. Prelec & Loewenstein (1998). Marketing Science, 17(1), 4-28.
+            Energy-specific: Heutel, G. (2017). NBER WP 23692.
+    - >150%  : Eliminated. Gathergood, J. (2012). J. Economic Psychology, 33(3), 590-602.
 
         Args:
             monthly_cost: Estimated monthly energy cost for this alternative ($)
@@ -563,30 +477,23 @@ class ApplianceGroundTruthCalculator:
         utilization = monthly_cost / monthly_budget
 
         if utilization < 0.80:
-            # Below 80%: Comfortable headroom, no penalty
             # Thaler (1999): Mental budget safety margin
             return 1.0
 
         elif utilization < 1.0:
             # 80-100%: Linear decline (approaching budget limit)
-            # Heath & Soll (1996): Increasing cost-consciousness near boundary
-            # Formula: penalty = 1.0 at 80%, penalty = 0.5 at 100%
-            # Slope: Δpenalty/Δutil = -0.5/0.2 = -2.5
+            #Linear decline. Heath & Soll 1996.
             return 1.0 - 2.5 * (utilization - 0.80)
 
         elif utilization < 1.5:
             # 100-150%: Exponential decline (budget violation)
-            # Kahneman & Tversky (1979): Loss aversion, steeper value function
-            # Prelec & Loewenstein (1998): "Pain of paying" accelerates with deficit
-            # Formula: penalty = 0.5 at 100%, penalty ≈ 0.01 at 150%
-            # exp(-3×(1.5-1.0)) ≈ 0.011, so 0.5 × 0.011 ≈ 0.006
+            # Exponential loss aversion. Prelec & Loewenstein 1998; Heutel 2017.
             import math
             return 0.5 * math.exp(-3.0 * (utilization - 1.0))
 
         else:
             # >150%: Complete elimination (infeasibility threshold)
-            # Simon (1955): Bounded rationality - infeasible options eliminated
-            # Gathergood (2012): 150% debt threshold for consumer stress
+            # Gathergood (2012)
             return 0.0
 
     def calculate_monthly_cost(self, per_cycle_cost: float, cycles_per_month: int = 30) -> float:
@@ -723,8 +630,8 @@ class ApplianceGroundTruthCalculator:
 
                 print(f"  Budget check: ${monthly_cost:.2f}/month vs ${scenario['Utility Budget']:.2f} budget")
                 print(
-                    f"  Utilization: {monthly_cost / scenario['Utility Budget'] * 100:.1f}% → penalty: {budget_penalty:.3f}")
-                print(f"  Energy score: {energy_vf:.2f} → {energy_vf_penalized:.2f} (after penalty)")
+                    f"  Utilization: {monthly_cost / scenario['Utility Budget'] * 100:.1f}% : penalty: {budget_penalty:.3f}")
+                print(f"  Energy score: {energy_vf:.2f} : {energy_vf_penalized:.2f} (after penalty)")
 
                 energy_vf = energy_vf_penalized
 
@@ -770,7 +677,7 @@ class ApplianceGroundTruthCalculator:
                 'raw_emissions': round(raw['emissions_lbs'], 3)
             }
 
-            print(f"  → FINAL SCORES:")
+            print(f"  : FINAL SCORES:")
             print(f"     Energy: {energy_vf:.2f}, Environmental: {env_vf:.2f}, "
                   f"Comfort: {comfort_vf:.2f}, Practicality: {practicality_vf:.2f}\n")
 
