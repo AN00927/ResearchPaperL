@@ -10,8 +10,6 @@ This project investigates the reliability of AI-generated Multi-Criteria Decisio
 
 **Author:** Ahaan Nigam  
 **Institution:** Downingtown East High School  
-**Advisor:** Dr. Melissa Bilec  
-**External Consultation:** Dr. He Huang (Paul Scherrer Institut)
 
 ---
 
@@ -25,12 +23,12 @@ This project investigates the reliability of AI-generated Multi-Criteria Decisio
 ### 2. RAG-Enhanced
 - **Approach:** LLM retrieves relevant research chunks from vector database before scoring
 - **Input:** User question → retrieves from 50+ ground truth scenarios → LLM scores with context
-- 
+- **Output:** Four 0-10 scores per alternative
 
 ### 3. Hybrid (AI Extraction + Calculator)
 - **Approach:** LLM extracts structured parameters (SEER tier, appliance age, etc.) → deterministic calculator computes scores using physics formulas
 - **Input:** User description → AI maps to parameters → calculator runs
-- **Output:** Four 1-10 scores from research-backed formulas
+- **Output:** Four 0-10 scores from research-backed formulas
 
 ---
 
@@ -68,53 +66,3 @@ Each architecture will be evaluated on:
 - Mean latency (query → ranked output)
 
 ---
-
-## Project Structure
-
-/src
-  /architectures
-    - pure_prompting.py         # Architecture 1 implementation
-    - rag_enhanced.py            # Architecture 2 implementation
-    - hybrid.py                  # Architecture 3 implementation
-  /ground_truth
-    - calculator.py              # Physics-based score calculations
-    - scenarios_generator.py     # (Future: auto-generate 100 scenarios)
-  /evaluation
-    - metrics.py                 # RMSE, MAE, Kendall's Tau, etc.
-    - validation.py              # Run all architectures on test set
-  /data
-    - scenarios_train.json       # 50 training scenarios (for tuning)
-    - scenarios_test.json        # 50 test scenarios (locked until final eval)
-    - ground_truth.json          # Calculated ground truth for all 100
-
-/docs
-  - ITERATION_LOG.md             # Development log for each architecture
-  - CITATIONS.md                 # All research sources with full references
-
----
-
-## Key Dependencies
-
-- Python 3.12
-- OpenRouter API (LLM access)
-
-See `requirements.txt` for full list.
-
----
-
-## Citation
-
-If you use this work, please cite:
-
-```
-Nigam, A. (2026). Comparing AI Integration Architectures for Multi-Criteria 
-Decision Analysis in Household Energy Optimization. Delaware Valley Science Fair.
-```
-
----
-
-## License
-
-This project is currently private. Contact author for access or collaboration inquiries.
-
-**Contact:** Ishaannigam27@gmail.com
