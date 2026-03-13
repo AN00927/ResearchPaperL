@@ -1,6 +1,5 @@
 import os
 import json
-import csv
 import requests
 import time
 from typing import Dict, List, Tuple, Optional

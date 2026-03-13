@@ -38,7 +38,7 @@ These sources were used to help build prompts:
 """
 
 
-df = pd.read_csv('TestScenarios.csv', encoding='utf-8-sig')
+df = pd.read_csv('../Scenario Files + Ground Truth/TestScenarios.csv', encoding='utf-8-sig')
 print("Columns found:", df.columns.tolist())
 print("First column repr():", repr(df.columns[0]))
 

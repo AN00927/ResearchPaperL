@@ -765,6 +765,6 @@ CRITERION_WEIGHTS = {
 # Main execution block
 if __name__ == "__main__":
     process_shower_scenarios(
-        csv_filename="ShowerScenarios.csv",
-        output_filename="ground_truth_shower.csv"
+        csv_filename="../Scenario Files + Ground Truth/ShowerScenarios.csv",
+        output_filename="../Scenario Files + Ground Truth/ground_truth_shower.csv"
     )

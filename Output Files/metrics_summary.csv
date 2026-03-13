@@ -1,0 +1,13 @@
+Decision Type,Criterion,Min,Max,Decreasing,Value Function,Notes
+HVAC,Energy Cost,0.47,3.31,Yes,Linear,5th-95th percentile from actual dataset distribution
+HVAC,Environmental,1.6,11.25,Yes,Linear,Derived from energy bounds × PA emissions factor (0.6458 lbs/kWh)
+HVAC,Comfort,0,10,No,Logarithmic a=1.5,
+HVAC,Practicality,1.5,10,No,Logarithmic a=1.2,Floor of 1.5
+Appliance,Energy Cost,0.02,0.9,Yes,Linear,HE washer off-peak min; standard electric dryer at peak max
+Appliance,Environmental,0.09,3.83,Yes,Linear,Adjusted to dataset; both bounds shifted from theoretical
+Appliance,Comfort,0,10,No,Logarithmic a=1.5,
+Appliance,Practicality,1.5,10,No,Logarithmic a=1.2,Floor from calculation
+Shower,Energy Cost,0.2,1.4,Yes,Linear,Short summer efficient min; long winter high-temp max
+Shower,Environmental,1.1,5.9,Yes,Linear,Derived from energy bounds × PA emissions factor (0.6458 lbs/kWh)
+Shower,Comfort,0,10,No,Logarithmic a=1.5,
+Shower,Practicality,1.5,10,No,Logarithmic a=1.2,Floor prevents zero practicality

@@ -24,7 +24,7 @@ CRITERION_WEIGHTS = {
     'practicality': 0.15
 }
 
-CHROMA_DB_PATH = './chroma_rag_db'
+CHROMA_DB_PATH = '../chroma_rag_db'
 COLLECTION_NAME = 'mcda_scenarios'
 EMBEDDING_MODEL = 'sentence-transformers/all-MiniLM-L6-v2'
 RETRIEVE_K = 3  # Number of similar scenarios to retrieve

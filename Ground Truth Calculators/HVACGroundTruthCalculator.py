@@ -765,6 +765,6 @@ CRITERION_WEIGHTS = {
 }
 if __name__ == "__main__":
     process_hvac_scenarios(
-        csv_filename="HVACScenarios.csv",
-        output_filename="ground_truth_hvac.csv"
+        csv_filename="../Scenario Files + Ground Truth/HVACScenarios.csv",
+        output_filename="../Scenario Files + Ground Truth/ground_truth_hvac.csv"
     )

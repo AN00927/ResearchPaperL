@@ -17,6 +17,27 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\HVACRagScenarios.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\HVACScenarios.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\RAGResults.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\ShowerRAGScenarios.csv">
           <value>
             <Attribute>
@@ -25,6 +46,13 @@
           </value>
         </entry>
         <entry key="\ShowerScenarios.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\TestScenarios.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
@@ -53,6 +81,13 @@
           </value>
         </entry>
         <entry key="\hybrid_results.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\metrics_summary.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

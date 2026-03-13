@@ -862,6 +862,6 @@ def apply_mavt_ranking(alternatives_scores: List[Dict]) -> Dict:
 
 if __name__ == "__main__":
     process_appliance_scenarios(
-        csv_filename="ApplianceScenarios.csv",
-        output_filename="ground_truth_appliance.csv"
+        csv_filename="../Scenario Files + Ground Truth/ApplianceScenarios.csv",
+        output_filename="../Output Files/ground_truth_appliance.csv"
     )
