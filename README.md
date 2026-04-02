@@ -49,25 +49,34 @@ LLM-MCDA/
 │   ├── HVACGroundTruthCalculator.py
 │   └── ShowerGroundTruthCalculator.py
 ├── Miscellaneous Files/
+│   ├── BuildRAG.py
 │   └── CalculateMetrics.py
 ├── Output Files/
+│   ├── COMPREHENSIVE METRIC SUMMARY.csv
+│   ├── RAGDiagnostics.json
+│   ├── RAGResults.csv
 │   ├── hybrid_diagnostics.json
 │   ├── hybrid_results.csv
-│   ├── metrics_summary.csv
 │   ├── pure_prompting_results.csv
 │   ├── pure_prompting_results_diagnostics.json
-│   ├── RAGDiagnostics.json
-│   └── RAGResults.csv
+├── Paper & Bibliography/
+│   ├── Abstract.pdf
+│   ├── Bibliography.pdf
+│   └── Notebook.pdf
 ├── Scenario Files/
 │   ├── ApplianceRAGScenariosGT.csv
 │   ├── ApplianceScenarios.csv
 │   ├── HVACRagScenarios.csv
 │   ├── HVACScenarios.csv
+│   ├── MCDA Files Consolidated.xlsx
 │   ├── ShowerRAGScenarios.csv
 │   ├── ShowerScenarios.csv
 │   └── TestScenarios.csv
-├── BuildRAG.py
-├── MCDA Files Consolidated.xlsx
+├── method/
+│   ├── Budget_Penalties.pdf
+│   ├── Calculator_Examples.pdf
+│   ├── Evaluation_Metric_Derivations.pdf
+│   └── Reference_Ranges_for_Value_Functions.pdf
 ├── README.md
 └── requirements.txt
 ```
